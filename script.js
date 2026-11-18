@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const nomorWA = "628788268521";
+  const nomorWA = "6287882468521";
   let keranjang = JSON.parse(localStorage.getItem("keranjangKripik")) || [];
   let produkAktif = null;
 
