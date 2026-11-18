@@ -1,4 +1,78 @@
-// 4. Logika Tambah, Kurang, Hapus & Simpan Keranjang
+const nomorWA = "6281234567890";
+let keranjang = JSON.parse(localStorage.getItem("keranjangKripik")) || [];
+let produkAktifModal = null;
+
+const searchBar = document.getElementById("search-bar");
+const searchInput = document.getElementById("search-input");
+const cartDrawer = document.getElementById("cart-drawer");
+const detailModal = document.getElementById("detail-modal");
+const overlay = document.getElementById("overlay");
+
+document.getElementById("btn-search").onclick = () => {
+  searchBar.classList.toggle("active");
+  if (searchBar.classList.contains("active")) searchInput.focus();
+};
+
+document.getElementById("btn-cart").onclick = () => {
+  cartDrawer.classList.add("active");
+  overlay.classList.add("active");
+};
+
+function tutupSemua() {
+  cartDrawer.classList.remove("active");
+  detailModal.classList.remove("active");
+  overlay.classList.remove("active");
+}
+
+document.getElementById("close-cart").onclick = tutupSemua;
+document.getElementById("close-modal").onclick = tutupSemua;
+overlay.onclick = tutupSemua;
+
+const katBtns = document.querySelectorAll(".kat-btn");
+const cards = document.querySelectorAll(".product-card");
+
+katBtns.forEach(btn => {
+  btn.onclick = () => {
+    katBtns.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const kat = btn.dataset.kategori;
+    cards.forEach(card => {
+      card.style.display = (kat === "semua" || card.dataset.kategori === kat) ? "flex" : "none";
+    });
+  };
+});
+
+searchInput.oninput = () => {
+  const kata = searchInput.value.toLowerCase();
+  cards.forEach(card => {
+    const nama = card.dataset.nama.toLowerCase();
+    card.style.display = nama.includes(kata) ? "flex" : "none";
+  });
+};
+
+cards.forEach(card => {
+  const nama = card.dataset.nama;
+  const harga = parseInt(card.dataset.harga);
+  const desk = card.dataset.desk;
+
+  card.querySelector(".btn-detail").onclick = () => {
+    produkAktifModal = { nama, harga };
+    document.getElementById("modal-title").innerText = nama;
+    document.getElementById("modal-price").innerText = "Rp " + harga.toLocaleString("id-ID");
+    document.getElementById("modal-desc").innerText = desk;
+    detailModal.classList.add("active");
+    overlay.classList.add("active");
+  };
+
+  card.querySelector(".btn-add").onclick = () => tambahKeKeranjang(nama, harga);
+});
+
+document.getElementById("modal-add-btn").onclick = () => {
+  if (produkAktifModal) {
+    tambahKeKeranjang(produkAktifModal.nama, produkAktifModal.harga);
+    tutupSemua();
+  }
+};
 function tambahKeKeranjang(nama, harga) {
   const ada = keranjang.find(item => item.nama === nama);
   if (ada) {
@@ -50,7 +124,6 @@ function simpanDanTampilkan() {
   totalEl.innerText = "Rp " + totalHarga.toLocaleString("id-ID");
 }
 
-// 5. Checkout Otomatis ke WhatsApp
 document.getElementById("checkout-wa").onclick = () => {
   if (keranjang.length === 0) return alert("Pilih kripik dulu ya sebelum pesan!");
   let teks = "Halo Kak, saya mau pesan kripik:\n\n";
@@ -61,7 +134,8 @@ document.getElementById("checkout-wa").onclick = () => {
     teks += `${idx + 1}. *${item.nama}* (${item.qty}x) - Rp ${sub.toLocaleString("id-ID")}\n`;
   });
   teks += `\n*Total Belanja: Rp ${total.toLocaleString("id-ID")}*\nMohon info ongkirnya ya Kak!`;
-  window.open(`https://wa.me{nomorWA}?text=${encodeURIComponent(teks)}`, "_blank");
+  const linkWA = ["https", "://wa.me/", nomorWA, "?text=", encodeURIComponent(teks)].join("");
+  window.open(linkWA, "_blank");
 };
 
 simpanDanTampilkan();
