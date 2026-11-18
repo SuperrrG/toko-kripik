@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kripik Renyah Nusantara</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-brand">🥔 Kripik<span>Ku</span></div>
+    <div class="nav-actions">
+      <button id="btn-search" class="icon-btn">🔍</button>
+      <button id="btn-cart" class="icon-btn">🛒 <span id="cart-badge" class="badge">0</span></button>
+    </div>
+  </header>
+
+  <div id="search-bar" class="search-bar">
+    <input type="text" id="search-input" placeholder="Cari varian kripik favoritmu...">
+  </div>
+
+  <section class="hero">
+    <div class="hero-content">
+      <span class="hero-tag">✨ 100% Renyah & Tanpa Pengawet</span>
+      <h1>Camilan Kripik Bikin Nagih Setiap Gigitan</h1>
+      <p>Dibuat dari bahan pilihan dengan bumbu melimpah. Cocok buat teman santai atau nugas.</p>
+      <a href="#katalog" class="btn-primary">Lihat Katalog</a>
+    </div>
+  </section>
+  <main id="katalog" class="container">
+    <div class="kategori-bar">
+      <button class="kat-btn active" data-kategori="semua">Semua</button>
+      <button class="kat-btn" data-kategori="pedas">Pedas</button>
+      <button class="kat-btn" data-kategori="gurih">Original Gurih</button>
+      <button class="kat-btn" data-kategori="manis">Manis</button>
+    </div>
+
+    <div class="product-grid">
+      <div class="product-card" data-kategori="pedas" data-nama="Kripik Kaca Pedas Daun Jeruk" data-harga="15000" data-desk="Kripik singkong super tipis dengan bumbu cabai asli dan aroma daun jeruk segar.">
+        <div class="img-box"><span class="promo-tag">Terlaris</span>🌶️<small>Foto Produk 1</small></div>
+        <div class="card-body">
+          <div class="rating">⭐ 4.9</div>
+          <h3>Kripik Kaca Pedas Daun Jeruk</h3>
+          <p class="price">Rp 15.000</p>
+          <div class="card-actions">
+            <button class="btn-detail">Detail</button>
+            <button class="btn-add">+ Keranjang</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-kategori="gurih" data-nama="Kripik Pisang Asin Gurih" data-harga="18000" data-desk="Irisan pisang kepok pilihan yang digoreng renyah dengan taburan garam gurih pas.">
+        <div class="img-box">🍌<small>Foto Produk 2</small></div>
+        <div class="card-body">
+          <div class="rating">⭐ 4.8</div>
+          <h3>Kripik Pisang Asin Gurih</h3>
+          <p class="price">Rp 18.000</p>
+          <div class="card-actions">
+            <button class="btn-detail">Detail</button>
+            <button class="btn-add">+ Keranjang</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-kategori="manis" data-nama="Kripik Singkong Karamel Gula Aren" data-harga="16000" data-desk="Perpaduan renyahnya kripik singkong dengan balutan gula aren asli yang manis legit.">
+        <div class="img-box"><span class="promo-tag">Baru</span>🍯<small>Foto Produk 3</small></div>
+        <div class="card-body">
+          <div class="rating">⭐ 4.9</div>
+          <h3>Kripik Singkong Karamel</h3>
+          <p class="price">Rp 16.000</p>
+          <div class="card-actions">
+            <button class="btn-detail">Detail</button>
+            <button class="btn-add">+ Keranjang</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-kategori="pedas" data-nama="Basreng Pedas Ekstra Nivel 5" data-harga="20000" data-desk="Bakso ikan goreng renyah dengan racikan bumbu pedas nampol dan rempah pilihan.">
+        <div class="img-box">🔥<small>Foto Produk 4</small></div>
+        <div class="card-body">
+          <div class="rating">⭐ 5.0</div>
+          <h3>Basreng Pedas Ekstra</h3>
+          <p class="price">Rp 20.000</p>
+          <div class="card-actions">
+            <button class="btn-detail">Detail</button>
+            <button class="btn-add">+ Keranjang</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <div id="detail-modal" class="modal">
+    <div class="modal-box">
+      <button id="close-modal" class="close-btn">✕</button>
+      <div class="modal-img-box" id="modal-icon">🥔<small>Area Foto Produk</small></div>
+      <h2 id="modal-title">Nama Produk</h2>
+      <p id="modal-price" class="price">Rp 0</p>
+      <p id="modal-desc" class="modal-desc">Deskripsi produk akan muncul di sini.</p>
+      <button id="modal-add-btn" class="btn-primary full-width">+ Tambah ke Keranjang</button>
+    </div>
+  </div>
+
+  <aside id="cart-drawer" class="cart-drawer">
+    <div class="cart-header">
+      <h3>Keranjang Belanja</h3>
+      <button id="close-cart" class="close-btn">✕</button>
+    </div>
+    <div id="cart-items" class="cart-items">
+      <p class="empty-msg">Keranjang masih kosong nih.</p>
+    </div>
+    <div class="cart-footer">
+      <div class="total-row"><span>Total:</span><strong id="cart-total">Rp 0</strong></div>
+      <button id="checkout-wa" class="btn-wa">Beli via WhatsApp</button>
+    </div>
+  </aside>
+
+  <div id="overlay" class="overlay"></div>
+  <script src="script.js"></script>
+</body>
+</html>
