@@ -158,3 +158,18 @@ body { background: var(--bg); color: var(--text); padding-bottom: 40px; }
 .credits-tag {
   margin-top: 6px; font-weight: 700; color: #fed7aa; letter-spacing: 0.4px;
 }
+
+body.no-scroll { overflow: hidden; position: fixed; width: 100%; }
+.cart-drawer { height: 100dvh; max-height: 100dvh; overscroll-behavior: contain; }
+.cart-items { overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.cart-footer { position: sticky; bottom: 0; z-index: 10; background: var(--bg); }
+
+html.no-scroll, body.no-scroll {
+  overflow: hidden !important;
+  height: 100% !important;
+  touch-action: none !important;
+}
+.cart-items {
+  touch-action: pan-y !important;
+  overflow-y: auto !important;
+}

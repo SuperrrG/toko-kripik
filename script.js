@@ -137,3 +137,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   renderKeranjang();
 });
+
+// Kunci total scroll luar saat keranjang atau modal terbuka
+const obsScroll = new MutationObserver(() => {
+  const terbuka = document.getElementById("overlay").classList.contains("active");
+  document.documentElement.classList.toggle("no-scroll", terbuka);
+  document.body.classList.toggle("no-scroll", terbuka);
+});
+obsScroll.observe(document.getElementById("overlay"), { attributes: true, attributeFilter: ["class"] });
+
+document.getElementById("overlay").addEventListener("touchmove", e => e.preventDefault(), { passive: false });
