@@ -159,3 +159,19 @@ html.no-scroll, body.no-scroll { overflow: hidden !important; height: 100% !impo
 .map-box iframe { width: 100%; height: 100%; border: 0; }
 .footer-bottom { max-width: 800px; margin: 24px auto 0; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.15); text-align: center; font-size: 12px; color: #d6cbb8; }
 .credits-tag { margin-top: 6px; font-weight: 800; color: var(--primary); letter-spacing: 0.5px; }
+
+button, .btn-primary, .icon-btn, .kat-btn, .btn-detail, .btn-add, .btn-wa {
+  transition: transform 0.12s ease, filter 0.12s ease !important;
+}
+button:active, .btn-primary:active, .icon-btn:active, .kat-btn:active, .btn-detail:active, .btn-add:active, .btn-wa:active {
+  transform: scale(0.92) !important;
+  filter: brightness(0.92);
+}
+.toast-notif {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--brown); color: var(--primary); padding: 10px 18px;
+  border-radius: 50px; font-size: 13px; font-weight: 800; border: 2px solid var(--primary);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25); z-index: 9999; opacity: 0;
+  pointer-events: none; transition: all 0.25s ease; white-space: nowrap;
+}
+.toast-notif.show { opacity: 1; transform: translateX(-50%) translateY(0); }

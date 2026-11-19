@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const loader = document.getElementById("loading-screen");
   const loaderText = document.getElementById("loading-text");
-  setTimeout(() => loader.classList.add("hide"), 700);
+  setTimeout(() => loader.classList.add("hide"), 1600);
 
   function tampilkanLoading(teks, aksi) {
     loaderText.innerText = teks;
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       aksi();
       loader.classList.add("hide");
-    }, 550);
+    }, 1100);
   }
 
   const searchBar = document.getElementById("search-bar");
@@ -143,4 +143,20 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   renderKeranjang();
+});
+
+const toastEl = document.createElement("div");
+toastEl.className = "toast-notif";
+document.body.appendChild(toastEl);
+let toastTimer = null;
+
+function munculToast(pesan) {
+  toastEl.innerText = pesan;
+  toastEl.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove("show"), 1800);
+}
+
+document.querySelectorAll(".btn-add, #modal-add-btn").forEach(btn => {
+  btn.addEventListener("click", () => munculToast("✅ Berhasil masuk ke keranjang!"));
 });
