@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <p class="modal-desc" style="margin-bottom:10px;">Keripik talas & singkong renyah khas Desa Kaligending, Karangsambung, Kebumen.</p>
       <div class="brand-kontak-grup">
         <a href="https://wa.me/6287882468521" target="_blank" class="brand-kontak-btn btn-wa-brand">💬 Chat WhatsApp: 0878-8246-8521</a>
-        <a href="httpshttps://https://www.instagram.com/creaz_snack?evlk=MWltOGdiaXM1djBvag==" target="_blank" class="brand-kontak-btn btn-ig-brand">📸 Follow Instagram: @creaz_snack</a>
+        <a href="https://://instagram.com" target="_blank" class="brand-kontak-btn btn-ig-brand">📸 Follow Instagram: @creaz_snack</a>
       </div>
       <button id="btn-lanjut-brand" class="btn-primary full-width">Lanjut Lihat Produk</button>
     </div>`;
