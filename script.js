@@ -48,8 +48,8 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="brand-badges"><span>✅ Halal</span><span>🌿 Tanpa Pengawet</span><span>🎨 Tanpa Pewarna</span></div>
       <p class="modal-desc" style="margin-bottom:10px;">Keripik talas & singkong renyah khas Desa Kaligending, Karangsambung, Kebumen.</p>
       <div class="brand-kontak-grup">
-        <a href="https://wa.me" target="_blank" class="brand-kontak-btn btn-wa-brand">💬 Chat WhatsApp: 0878-8246-8521</a>
-        <a href="httpshttps://://instagram.com" target="_blank" class="brand-kontak-btn btn-ig-brand">📸 Follow Instagram: @creaz_snack</a>
+        <a href="https://wa.me/6287882468521" target="_blank" class="brand-kontak-btn btn-wa-brand">💬 Chat WhatsApp: 0878-8246-8521</a>
+        <a href="httpshttps://https://www.instagram.com/creaz_snack?evlk=MWltOGdiaXM1djBvag==" target="_blank" class="brand-kontak-btn btn-ig-brand">📸 Follow Instagram: @creaz_snack</a>
       </div>
       <button id="btn-lanjut-brand" class="btn-primary full-width">Lanjut Lihat Produk</button>
     </div>`;
@@ -149,7 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let teks = `Halo Kak, saya mau pesan *Keripik Crea'z*:\n\n`, total = 0;
     keranjang.forEach((item, idx) => { const sub = item.harga * item.qty; total += sub; teks += `${idx + 1}. *${item.nama}* (${item.qty}x @ Rp ${item.harga.toLocaleString("id-ID")}) = Rp ${sub.toLocaleString("id-ID")}\n`; });
     teks += `\n*Total Belanja: Rp ${total.toLocaleString("id-ID")}*\n\n*Data Penerima:*\nNama: ${namaPembeli}\nAlamat: ${alamatPembeli}`;
-    window.open(`https://wa.me{nomorWA}?text=${encodeURIComponent(teks)}`, "_blank");
+    window.open(`https://wa.me/6287882468521{nomorWA}?text=${encodeURIComponent(teks)}`, "_blank");
   };
 
   renderKeranjang();
