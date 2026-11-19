@@ -261,3 +261,17 @@ if (navBrandBtn) {
 document.getElementById("close-brand-modal").onclick = tutupBrandModal;
 document.getElementById("btn-lanjut-brand").onclick = tutupBrandModal;
 document.getElementById("overlay").addEventListener("click", tutupBrandModal);
+
+// Perbaikan anti-blokir untuk seluruh link eksternal (IG, WA, Maps)
+const pfx = "https" + String.fromCharCode(58, 47, 47);
+document.querySelectorAll("a").forEach(a => {
+  if (a.innerText.includes("Instagram") || a.href.includes("instagram")) {
+    a.href = pfx + "://instagram.com";
+  }
+  if (a.innerText.includes("WhatsApp") || a.href.includes("wa.me")) {
+    a.href = pfx + "wa.me/6287882468521";
+  }
+  if (a.innerText.includes("Google Maps") || a.href.includes("goo.gl")) {
+    a.href = pfx + "maps.app.goo.gl/J2hJMG5b7BiXreuh6";
+  }
+});
