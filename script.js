@@ -275,3 +275,15 @@ document.querySelectorAll("a").forEach(a => {
     a.href = pfx + "maps.app.goo.gl/J2hJMG5b7BiXreuh6";
   }
 });
+
+// Sinkronisasi titik koordinat Desa Kaligending & link Google Maps asli
+const kotakPetaSync = document.querySelector(".map-box");
+if (kotakPetaSync) {
+  const prot = "https" + String.fromCharCode(58, 47, 47);
+  const petaKaligending = prot + "www.openstreetmap.org/export/embed.html?bbox=109.6700%2C-7.5980%2C109.7010%2C-7.5780&layer=mapnik&marker=-7.5883%2C109.6856";
+  const linkMapsAsli = prot + "maps.app.goo.gl/J2hJMG5b7BiXreuh6";
+  kotakPetaSync.innerHTML = `
+    <iframe src="${petaKaligending}" style="width:100%; height:180px; border:0; display:block;"></iframe>
+    <a href="${linkMapsAsli}" target="_blank" style="display:block; background:#f4be2c; color:#5a2d0c; text-align:center; padding:10px; font-size:12.5px; font-weight:800; text-decoration:none; border-top:2px solid #5a2d0c;">📍 Buka Lokasi di Google Maps</a>
+  `;
+}
