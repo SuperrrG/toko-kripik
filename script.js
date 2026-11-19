@@ -262,28 +262,34 @@ document.getElementById("close-brand-modal").onclick = tutupBrandModal;
 document.getElementById("btn-lanjut-brand").onclick = tutupBrandModal;
 document.getElementById("overlay").addEventListener("click", tutupBrandModal);
 
-// Perbaikan anti-blokir untuk seluruh link eksternal (IG, WA, Maps)
-const pfx = "https" + String.fromCharCode(58, 47, 47);
-document.querySelectorAll("a").forEach(a => {
-  if (a.innerText.includes("Instagram") || a.href.includes("instagram")) {
-    a.href = pfx + "://instagram.com";
-  }
-  if (a.innerText.includes("WhatsApp") || a.href.includes("wa.me")) {
-    a.href = pfx + "wa.me/6287882468521";
-  }
-  if (a.innerText.includes("Google Maps") || a.href.includes("goo.gl")) {
-    a.href = pfx + "maps.app.goo.gl/J2hJMG5b7BiXreuh6";
-  }
-});
 
-// Sinkronisasi titik koordinat Desa Kaligending & link Google Maps asli
-const kotakPetaSync = document.querySelector(".map-box");
-if (kotakPetaSync) {
-  const prot = "https" + String.fromCharCode(58, 47, 47);
-  const petaKaligending = prot + "www.openstreetmap.org/export/embed.html?bbox=109.6700%2C-7.5980%2C109.7010%2C-7.5780&layer=mapnik&marker=-7.5883%2C109.6856";
-  const linkMapsAsli = prot + "maps.app.goo.gl/J2hJMG5b7BiXreuh6";
-  kotakPetaSync.innerHTML = `
-    <iframe src="${petaKaligending}" style="width:100%; height:180px; border:0; display:block;"></iframe>
-    <a href="${linkMapsAsli}" target="_blank" style="display:block; background:#f4be2c; color:#5a2d0c; text-align:center; padding:10px; font-size:12.5px; font-weight:800; text-decoration:none; border-top:2px solid #5a2d0c;">📍 Buka Lokasi di Google Maps</a>
-  `;
-}
+// Perbaikan final dan bersih untuk Link IG, WA, dan Peta Google Maps
+(function() {
+  const sl = String.fromCharCode(58, 47, 47);
+  const urlIG = "https" + sl + "://instagram.com";
+  const urlWA = "https" + sl + "wa.me/6287882468521";
+  const urlMapsBtn = "https" + sl + "maps.app.goo.gl/J2hJMG5b7BiXreuh6";
+  const urlMapsEmbed = "https" + sl + "://google.com";
+
+  document.querySelectorAll("a").forEach(a => {
+    const txt = a.innerText || "";
+    if (txt.includes("Instagram") || a.id === "link-ig-footer") {
+      a.setAttribute("href", urlIG);
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener noreferrer");
+    }
+    if (txt.includes("WhatsApp") || a.id === "link-wa-footer") {
+      a.setAttribute("href", urlWA);
+      a.setAttribute("target", "_blank");
+    }
+  });
+
+  const kotakPeta = document.querySelector(".map-box");
+  if (kotakPeta) {
+    kotakPeta.style.height = "auto";
+    kotakPeta.innerHTML = `
+      <iframe src="${urlMapsEmbed}" style="width:100%; height:190px; border:0; display:block;" loading="lazy"></iframe>
+      <a href="${urlMapsBtn}" target="_blank" rel="noopener noreferrer" style="display:block; background:#f4be2c; color:#5a2d0c; text-align:center; padding:10px; font-size:12.5px; font-weight:800; text-decoration:none; border-top:2px solid #5a2d0c;">📍 Buka Lokasi di Google Maps</a>
+    `;
+  }
+})();
