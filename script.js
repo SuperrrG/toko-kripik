@@ -71,10 +71,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   cards.forEach(card => {
-    const nama = card.dataset.nama, harga = parseInt(card.dataset.harga), desk = card.dataset.desk;
+    const nama = card.dataset.nama, harga = parseInt(card.dataset.harga), desk = card.dataset.desk, img = card.dataset.img;
     card.querySelector(".btn-detail").onclick = () => {
       produkAktif = { nama, harga };
-      document.getElementById("modal-title").innerText = nama;
+      document.getElementById("modal-img").src = img; document.getElementById("modal-title").innerText = nama;
       document.getElementById("modal-price").innerText = "Rp " + harga.toLocaleString("id-ID");
       document.getElementById("modal-desc").innerText = desk;
       detailModal.classList.add("active"); overlay.classList.add("active");
