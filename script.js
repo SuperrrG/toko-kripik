@@ -160,3 +160,15 @@ function munculToast(pesan) {
 document.querySelectorAll(".btn-add, #modal-add-btn").forEach(btn => {
   btn.addEventListener("click", () => munculToast("✅ Berhasil masuk ke keranjang!"));
 });
+
+// Pastikan peta Desa Kaligending, Karangsambung, Kebumen tampil stabil
+const kotakPeta = document.querySelector(".map-box");
+if (kotakPeta) {
+  const urlOSM = ["https", "://www.openstreetmap.org/export/embed.html?bbox=109.6650%2C-7.5780%2C109.7050%2C-7.5450&layer=mapnik&marker=-7.5615%2C109.6850"].join("");
+  const urlGMaps = ["https", "://://google.com"].join("");
+  kotakPeta.style.height = "auto";
+  kotakPeta.innerHTML = `
+    <iframe src="${urlOSM}" style="width:100%; height:175px; border:0; display:block;"></iframe>
+    <a href="${urlGMaps}" target="_blank" style="display:block; background:#f4be2c; color:#5a2d0c; text-align:center; padding:8px; font-size:12px; font-weight:800; text-decoration:none;">📍 Buka Rute di Google Maps</a>
+  `;
+}
