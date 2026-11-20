@@ -113,10 +113,10 @@
   if (creditEl) {
     creditEl.style.cssText += ";cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;padding:8px 12px;display:inline-block;";
 
-    function panggilPinAdmin() {
+    async function panggilPinAdmin() {
       if (!localStorage.getItem("gh_token_creaz")) return;
       const jalankanPrompt = () => {
-        const pin = prompt("Masukkan PIN Admin Crea'z:");
+        const pin = window.creazPrompt ? await window.creazPrompt("Gerbang Admin Crea'z", "••••") : prompt("Masukkan PIN Admin Crea'z:");
         if (pin === PIN_ADMIN) {
           if (window.tampilLoadingAksi) window.tampilLoadingAksi("⚙️ Memuat Panel Admin Crea'z...", 1600, bukaPanelAdmin);
           else bukaPanelAdmin();
