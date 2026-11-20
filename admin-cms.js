@@ -118,11 +118,11 @@
       const jalankanPrompt = () => {
         const pin = prompt("Masukkan PIN Admin Crea'z:");
         if (pin === PIN_ADMIN) {
-          if (window.tampilLoadingAksi) window.tampilLoadingAksi("⚙️ Memuat Panel Admin Crea'z...", 3500, bukaPanelAdmin);
+          if (window.tampilLoadingAksi) window.tampilLoadingAksi("⚙️ Memuat Panel Admin Crea'z...", 1500, bukaPanelAdmin);
           else bukaPanelAdmin();
         } else if (pin !== null) alert("PIN salah!");
       };
-      if (window.tampilLoadingAksi) window.tampilLoadingAksi("🔐 Membuka gerbang PIN Admin...", 3500, jalankanPrompt);
+      if (window.tampilLoadingAksi) window.tampilLoadingAksi("🔐 Membuka gerbang PIN Admin...", 1500, jalankanPrompt);
       else jalankanPrompt();
     }
 

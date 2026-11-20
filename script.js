@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const splash = document.getElementById("loading-screen") || document.getElementById("splash-screen");
-  if (splash) setTimeout(() => { splash.classList.add("hidden"); splash.style.opacity = "0"; setTimeout(() => splash.remove(), 450); }, 3500);
+  if (splash) setTimeout(() => { splash.classList.add("hidden"); splash.style.opacity = "0"; setTimeout(() => splash.remove(), 450); }, 1500);
 
   const overlay = document.getElementById("overlay");
   const cartDrawer = document.getElementById("cart-drawer");
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       box.style.display = "none";
       if (typeof callback === "function") callback();
-    }, durasi || 3500);
+    }, durasi || 1500);
   };
 
   document.addEventListener("click", (e) => {
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
       else if (url.includes("instagram.com")) msg = "📸 Membuka Instagram Crea'z...";
       else if (url.includes("shopee.co.id")) msg = "🛍️ Membuka toko Shopee...";
       else if (url.includes("://google.com")) msg = "📍 Membuka titik lokasi Maps...";
-      window.tampilLoadingAksi(msg, 3500, () => window.open(url, "_blank"));
+      window.tampilLoadingAksi(msg, 1500, () => window.open(url, "_blank"));
     }
   });
 
@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
       toast.style.transform = "translateX(-50%) scale(1.08)";
       setTimeout(() => toast.style.transform = "translateX(-50%) scale(1)", 130);
       clearTimeout(window._toastTimer);
-      window._toastTimer = setTimeout(() => { toast.style.opacity = "0"; setTimeout(() => toast.style.display = "none", 200); }, 3500);
+      window._toastTimer = setTimeout(() => { toast.style.opacity = "0"; setTimeout(() => toast.style.display = "none", 200); }, 1500);
     },
 
     renderKeranjang() {
@@ -241,7 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
         modalVerif = document.createElement("div");
         modalVerif.id = "modal-verif-wa";
         modalVerif.className = "modal";
-        modalVerif.style.zIndex = "3500";
+        modalVerif.style.zIndex = "1500";
         document.body.appendChild(modalVerif);
       }
 
@@ -267,7 +267,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const waLink = "https" + String.fromCharCode(58,47,47) + "wa." + "me/6285185056083";
       document.getElementById("btn-lanjut-wa").onclick = function() {
         modalVerif.classList.remove("active");
-        window.tampilLoadingAksi("💬 Memproses pesanan ke WhatsApp...", 3500, () => {
+        window.tampilLoadingAksi("💬 Memproses pesanan ke WhatsApp...", 1500, () => {
           window.open(`${waLink}?text=${encodeURIComponent(teksWA)}`, "_blank");
         });
       };
@@ -331,7 +331,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const kat = document.getElementById("katalog"); if (kat) kat.scrollIntoView({ behavior: "smooth" });
         };
       }
-      window.tampilLoadingAksi("✨ Membuka profil Keripik Crea'z...", 3500, () => { bModal.classList.add("active"); bModal.style.display = "flex"; bModal.style.opacity = "1"; bModal.style.pointerEvents = "auto"; bukaOverlay(); });
+      window.tampilLoadingAksi("✨ Membuka profil Keripik Crea'z...", 1500, () => { bModal.classList.add("active"); bModal.style.display = "flex"; bModal.style.opacity = "1"; bModal.style.pointerEvents = "auto"; bukaOverlay(); });
     });
   }
 });
