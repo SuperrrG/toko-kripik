@@ -86,13 +86,25 @@
   function tambahKeKeranjangGlobal(p) {
     let k = JSON.parse(localStorage.getItem("keranjangCreaz")) || [];
     const ada = k.find(i => i.nama === p.nama);
-    if (ada) { ada.qty += 1; ada.img = p.img; ada.harga = Number(p.harga); }
-    else k.push({ nama: p.nama, harga: Number(p.harga), img: p.img, qty: 1 });
+    let qtyItemIni = 1;
+    if (ada) {
+      ada.qty += 1;
+      ada.img = p.img;
+      ada.harga = Number(p.harga);
+      qtyItemIni = ada.qty;
+    } else {
+      k.push({ nama: p.nama, harga: Number(p.harga), img: p.img, qty: 1 });
+    }
     localStorage.setItem("keranjangCreaz", JSON.stringify(k));
 
     let totalQty = k.reduce((acc, item) => acc + item.qty, 0);
-    const badge = document.getElementById("cart-count");
-    if (badge) badge.innerText = totalQty;
+    const badge = document.getElementById("cart-badge") || document.getElementById("cart-count") || document.querySelector(".cart-btn span");
+    if (badge) {
+      badge.innerText = totalQty;
+      badge.style.transform = "scale(1.35)";
+      badge.style.transition = "transform 0.15s ease";
+      setTimeout(() => badge.style.transform = "scale(1)", 160);
+    }
 
     if (typeof window.sinkronKeranjangUI === "function") {
       try { window.sinkronKeranjangUI(); } catch (err) {}
@@ -102,14 +114,20 @@
     if (!toast) {
       toast = document.createElement("div");
       toast.className = "toast-notif";
-      toast.style.cssText = "position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#5a2d0c;color:#fef7dc;padding:10px 18px;border-radius:99px;font-size:13px;font-weight:800;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.25);transition:opacity 0.25s;";
+      toast.style.cssText = "position:fixed;bottom:24px;left:50%;transform:translateX(-50%) scale(0.95);background:#5a2d0c;color:#fef7dc;padding:10px 18px;border-radius:99px;font-size:12.5px;font-weight:800;z-index:9999;box-shadow:0 4px 14px rgba(0,0,0,0.3);transition:transform 0.14s ease, opacity 0.2s ease;white-space:nowrap;";
       document.body.appendChild(toast);
     }
-    toast.innerText = "✅ Masuk ke keranjang!";
+    toast.innerText = `✅ +1 Masuk keranjang (${qtyItemIni}x • Total ${totalQty} pcs)`;
     toast.style.opacity = "1";
     toast.style.display = "block";
+    toast.style.transform = "translateX(-50%) scale(1.08)";
+    setTimeout(() => { toast.style.transform = "translateX(-50%) scale(1)"; }, 130);
+
     clearTimeout(window._toastTimer);
-    window._toastTimer = setTimeout(() => { toast.style.opacity = "0"; setTimeout(() => toast.style.display = "none", 250); }, 1600);
+    window._toastTimer = setTimeout(() => {
+      toast.style.opacity = "0";
+      setTimeout(() => toast.style.display = "none", 200);
+    }, 1800);
   }
 
   let ketukan = 0, timerKetuk = null;
