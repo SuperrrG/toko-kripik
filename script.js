@@ -60,197 +60,73 @@ document.addEventListener("DOMContentLoaded", () => {
     overlay.classList.remove("active"); document.documentElement.classList.remove("no-scroll"); document.body.classList.remove("no-scroll");
   }
 
-  document.getElementById("btn-cart").onclick = () => { if (typeof window.sinkronKeranjangUI === "function") window.sinkronKeranjangUI(); cartDrawer.classList.add("active"); bukaOverlay(); };
-  document.getElementById("close-cart").onclick = tutupSemua;
-  document.getElementById("close-modal").onclick = tutupSemua;
-  document.getElementById("close-brand-modal").onclick = tutupSemua;
-  document.getElementById("btn-lanjut-brand").onclick = tutupSemua;
-  overlay.onclick = tutupSemua;
-  overlay.addEventListener("touchmove", e => e.preventDefault(), { passive: false });
+  document.getElementById("btn-cart").onclick = () => { if (typeof window.sinkronKeranjangUI = function() {
+    let data = JSON.parse(localStorage.getItem("keranjangCreaz")) || [];
+    const wadah = document.getElementById("cart-items");
+    const badge = document.getElementById("cart-badge");
+    const totalEl = document.getElementById("cart-total");
+    if (!wadah) return;
 
-  document.querySelector(".nav-brand").onclick = e => {
-    e.preventDefault();
-    const ikon = ["🥔", "✨", "🌶️", "💛"];
-    for (let i = 0; i < 20; i++) {
-      setTimeout(() => {
-        const el = document.createElement("div");
-        el.className = "kripik-jatuh"; el.innerText = ikon[Math.floor(Math.random() * ikon.length)];
-        el.style.left = Math.random() * 92 + "vw"; el.style.animationDuration = "1.8s";
-        document.body.appendChild(el); setTimeout(() => el.remove(), 1800);
-      }, i * 60);
-    }
-    brandModal.classList.add("active"); bukaOverlay();
-  };
-
-  const katBtns = document.querySelectorAll(".kat-btn");
-  const cards = document.querySelectorAll(".product-card");
-  katBtns.forEach(btn => {
-    btn.onclick = () => {
-      katBtns.forEach(b => b.classList.remove("active")); btn.classList.add("active");
-      const kat = btn.dataset.kategori;
-      cards.forEach(card => card.style.display = (kat === "semua" || card.dataset.kategori === kat) ? "flex" : "none");
-    };
-  });
-
-  const toastEl = document.createElement("div"); toastEl.className = "toast-notif"; document.body.appendChild(toastEl);
-  let toastTimer = null;
-  function munculToast(pesan) { toastEl.innerText = pesan; toastEl.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove("show"), 1800); }
-
-  cards.forEach(card => {
-    const nama = card.dataset.nama, harga = parseInt(card.dataset.harga), desk = card.dataset.desk, img = card.dataset.img;
-    card.querySelector(".btn-detail").onclick = () => {
-      produkAktif = { nama, harga, img };
-      document.getElementById("modal-img").src = img; document.getElementById("modal-title").innerText = nama;
-      document.getElementById("modal-price").innerText = "Rp " + harga.toLocaleString("id-ID"); document.getElementById("modal-desc").innerText = desk;
-      detailModal.classList.add("active"); bukaOverlay();
-    };
-    card.querySelector(".btn-add").onclick = () => { tambahItem(nama, harga, img); munculToast("✅ Masuk ke keranjang!"); };
-  });
-
-  document.getElementById("modal-add-btn").onclick = () => { if (produkAktif) { tambahItem(produkAktif.nama, produkAktif.harga, produkAktif.img); munculToast("✅ Masuk ke keranjang!"); tutupSemua(); } };
-
-  function tambahItem(nama, harga, img) {
-    const ada = keranjang.find(i => i.nama === nama);
-    if (ada) { ada.qty += 1; ada.img = img; } else keranjang.push({ nama, harga, img: img || "produk1.png", qty: 1 });
-    renderKeranjang();
-  }
-  window.ubahQty = (index, delta) => { keranjang[index].qty += delta; if (keranjang[index].qty <= 0) keranjang.splice(index, 1); renderKeranjang(); };
-
-  function renderKeranjang() {
-    cartItemsContainer.innerHTML = "";
     let totalHarga = 0, totalQty = 0;
-
-    if (keranjang.length === 0) {
-      cartItemsContainer.innerHTML = `<p style="text-align:center;color:#8c5228;padding:30px 10px;font-weight:700;">Keranjang masih kosong nih.<br>Yuk pilih keripik favoritmu!</p>`;
+    if (data.length === 0) {
+      wadah.innerHTML = `<p style="text-align:center;color:#8c5228;padding:30px 10px;font-weight:700;">Keranjang masih kosong nih.<br>Yuk pilih keripik favoritmu!</p>`;
     } else {
-      cartItemsContainer.innerHTML = `<div style="text-align:right;margin-bottom:6px;"><button type="button" id="btn-kosong-cart" style="background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:800;cursor:pointer;">🗑️ Kosongkan Keranjang</button></div>`;
-      keranjang.forEach((item, index) => {
+      let html = `<div style="text-align:right;margin-bottom:8px;"><button type="button" id="btn-kosong-cart" style="background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:800;cursor:pointer;">🗑️ Kosongkan Keranjang</button></div>`;
+      data.forEach((item, i) => {
         const sub = item.harga * item.qty;
         totalHarga += sub; totalQty += item.qty;
-        cartItemsContainer.innerHTML += `
-          <div class="cart-item">
-            <img src="${item.img || "produk1.png"}" alt="${item.nama}" class="cart-item-img">
-            <div class="cart-item-info">
-              <h4>${item.nama}</h4>
-              <div class="cart-item-meta">${item.qty}x @ Rp ${item.harga.toLocaleString("id-ID")}</div>
-              <div class="cart-item-sub">Subtotal: Rp ${sub.toLocaleString("id-ID")}</div>
+        html += `
+          <div class="cart-item" style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #e6dec8;">
+            <img src="${item.img || "produk1.png"}" alt="${item.nama}" style="width:52px;height:52px;object-fit:cover;border-radius:8px;border:1.5px solid #5a2d0c;flex-shrink:0;">
+            <div style="flex:1;min-width:0;">
+              <h4 style="font-size:12.5px;margin:0 0 2px;color:#5a2d0c;">${item.nama}</h4>
+              <div style="font-size:11.5px;color:#8c5228;">${item.qty}x @ Rp ${Number(item.harga).toLocaleString("id-ID")}</div>
+              <div style="font-size:12px;font-weight:800;color:#5a2d0c;">Rp ${sub.toLocaleString("id-ID")}</div>
             </div>
-            <div class="qty-control">
-              <button class="qty-btn minus" data-index="${index}">-</button>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <button type="button" class="c-min" data-i="${i}" style="width:26px;height:26px;border-radius:6px;border:1.5px solid #5a2d0c;background:#fef7dc;font-weight:900;cursor:pointer;">-</button>
               <span style="font-weight:800;font-size:13px;min-width:16px;text-align:center;">${item.qty}</span>
-              <button class="qty-btn plus" data-index="${index}">+</button>
+              <button type="button" class="c-plus" data-i="${i}" style="width:26px;height:26px;border-radius:6px;border:1.5px solid #5a2d0c;background:#f4be2c;font-weight:900;cursor:pointer;">+</button>
             </div>
           </div>`;
+      });
+      wadah.innerHTML = html;
+
+      document.getElementById("btn-kosong-cart").onclick = () => {
+        localStorage.setItem("keranjangCreaz", "[]");
+        window.sinkronKeranjangUI();
+      };
+      wadah.querySelectorAll(".c-min").forEach(b => b.onclick = () => {
+        const i = b.dataset.i;
+        if (data[i].qty > 1) data[i].qty -= 1; else data.splice(i, 1);
+        localStorage.setItem("keranjangCreaz", JSON.stringify(data));
+        window.sinkronKeranjangUI();
+      });
+      wadah.querySelectorAll(".c-plus").forEach(b => b.onclick = () => {
+        data[b.dataset.i].qty += 1;
+        localStorage.setItem("keranjangCreaz", JSON.stringify(data));
+        window.sinkronKeranjangUI();
       });
     }
 
     const diskon = totalQty >= 10 ? Math.round(totalHarga * 0.2) : 0;
     const totalAkhir = totalHarga - diskon;
-    const info = totalQty > 0 && totalQty < 10
-      ? `<div style="font-size:11.5px;color:#8c5228;background:#fef7dc;border:1px dashed #5a2d0c;border-radius:8px;padding:6px 8px;margin-bottom:8px;text-align:center;font-weight:700;">💡 Tambah <b>${10 - totalQty} pcs lagi</b> untuk otomatis dapat <b>Diskon 20%</b>!</div>`
-      : (totalQty >= 10 ? `<div style="font-size:11.5px;color:#15803d;background:#dcfce7;border:1px solid #86efac;border-radius:8px;padding:6px 8px;margin-bottom:8px;text-align:center;font-weight:800;">🎉 Diskon Grosir 20% (-Rp ${diskon.toLocaleString("id-ID")}) aktif!</div>` : "");
+    if (badge) badge.innerText = totalQty;
 
-    const totalEl = document.getElementById("cart-total");
-    if (totalEl) {
-      totalEl.parentElement.innerHTML = info + (diskon > 0
-        ? `<div style="display:flex;justify-content:space-between;font-size:12px;color:#8c5228;"><span>Subtotal (${totalQty} pcs):</span><span style="text-decoration:line-through;">Rp ${totalHarga.toLocaleString("id-ID")}</span></div>
-           <div style="display:flex;justify-content:space-between;font-weight:900;font-size:15px;color:#5a2d0c;"><span>Total Akhir (-20%):</span><span id="cart-total">Rp ${totalAkhir.toLocaleString("id-ID")}</span></div>`
-        : `<div style="display:flex;justify-content:space-between;font-weight:900;font-size:15px;color:#5a2d0c;"><span>Total Belanja:</span><span id="cart-total">Rp ${totalHarga.toLocaleString("id-ID")}</span></div>`);
+    const totalRow = document.querySelector(".total-row");
+    if (totalRow) {
+      const info = totalQty > 0 && totalQty < 10
+        ? `<div style="width:100%;font-size:11.5px;color:#8c5228;background:#fef7dc;border:1px dashed #5a2d0c;border-radius:8px;padding:6px 8px;margin-bottom:8px;text-align:center;font-weight:700;">💡 Tambah <b>${10 - totalQty} pcs lagi</b> untuk otomatis dapat <b>Diskon 20%</b>!</div>`
+        : (totalQty >= 10 ? `<div style="width:100%;font-size:11.5px;color:#15803d;background:#dcfce7;border:1px solid #86efac;border-radius:8px;padding:6px 8px;margin-bottom:8px;text-align:center;font-weight:800;">🎉 Diskon Grosir 20% (-Rp ${diskon.toLocaleString("id-ID")}) aktif!</div>` : "");
+      totalRow.style.display = "block";
+      totalRow.innerHTML = info + (diskon > 0
+        ? `<div style="display:flex;justify-content:space-between;font-size:12px;color:#8c5228;margin-bottom:2px;"><span>Subtotal (${totalQty} pcs):</span><span style="text-decoration:line-through;">Rp ${totalHarga.toLocaleString("id-ID")}</span></div>
+           <div style="display:flex;justify-content:space-between;font-weight:900;font-size:15px;color:#5a2d0c;"><span>Total Akhir (-20%):</span><strong id="cart-total">Rp ${totalAkhir.toLocaleString("id-ID")}</strong></div>`
+        : `<div style="display:flex;justify-content:space-between;font-weight:900;font-size:15px;color:#5a2d0c;"><span>Total:</span><strong id="cart-total">Rp ${totalHarga.toLocaleString("id-ID")}</strong></div>`);
     }
-
-    if (cartBadge) cartBadge.innerText = totalQty;
-    localStorage.setItem("keranjangCreaz", JSON.stringify(keranjang));
-
-    document.querySelectorAll(".qty-btn.minus").forEach(b => b.onclick = () => {
-      const i = b.dataset.index;
-      if (keranjang[i].qty > 1) keranjang[i].qty -= 1; else keranjang.splice(i, 1);
-      renderKeranjang();
-    });
-    const btnKosong = document.getElementById("btn-kosong-cart"); if (btnKosong) btnKosong.onclick = () => { keranjang = []; localStorage.setItem("keranjangCreaz", "[]"); renderKeranjang(); };
-    document.querySelectorAll(".qty-btn.plus").forEach(b => b.onclick = () => {
-      keranjang[b.dataset.index].qty += 1; renderKeranjang();
-    });
-  }
-
-  document.getElementById("checkout-wa").onclick = () => {
-    keranjang = JSON.parse(localStorage.getItem("keranjangCreaz")) || [];
-    if (keranjang.length === 0) return alert("Pilih produk Crea'z dulu ya!");
-    const nama = document.getElementById("nama-pemesan").value.trim();
-    const alamat = document.getElementById("alamat-pemesan").value.trim();
-    if (!nama || !alamat) return alert("Mohon isi Nama dan Alamat pengiriman dulu ya!");
-
-    let subAll = 0, qtyAll = 0, listHTML = "";
-    let teksWA = `Halo Kak, saya mau pesan *Keripik Crea'z*:\n\n`;
-
-    keranjang.forEach((item, idx) => {
-      const sub = item.harga * item.qty;
-      subAll += sub; qtyAll += item.qty;
-      listHTML += `<div style="display:flex;justify-content:space-between;font-size:12.5px;padding:4px 0;border-bottom:1px dashed #e6dec8;">
-        <span>${idx + 1}. <b>${item.nama}</b> (${item.qty}x)</span>
-        <span style="font-weight:700;">Rp ${sub.toLocaleString("id-ID")}</span>
-      </div>`;
-      teksWA += `${idx + 1}. *${item.nama}* (${item.qty}x @ Rp ${item.harga.toLocaleString("id-ID")}) = Rp ${sub.toLocaleString("id-ID")}\n`;
-    });
-
-    const pot = qtyAll >= 10 ? Math.round(subAll * 0.2) : 0;
-    const totalAkhir = subAll - pot;
-
-    let ringkasanHargaHTML = `<div style="display:flex;justify-content:space-between;font-size:12.5px;margin-top:8px;"><span>Total Barang (${qtyAll} pcs):</span><span>Rp ${subAll.toLocaleString("id-ID")}</span></div>`;
-    if (pot > 0) {
-      ringkasanHargaHTML += `<div style="display:flex;justify-content:space-between;font-size:12.5px;color:#15803d;font-weight:800;"><span>🎉 Diskon Grosir 20%:</span><span>-Rp ${pot.toLocaleString("id-ID")}</span></div>`;
-      teksWA += `\nSubtotal (${qtyAll} pcs): Rp ${subAll.toLocaleString("id-ID")}`;
-      teksWA += `\n🎉 *Diskon Grosir 20% (≥10 pcs): -Rp ${pot.toLocaleString("id-ID")}*`;
-      teksWA += `\n*Total Bayar: Rp ${totalAkhir.toLocaleString("id-ID")}*\n\n`;
-    } else {
-      teksWA += `\n*Total Belanja (${qtyAll} pcs): Rp ${subAll.toLocaleString("id-ID")}*\n\n`;
-    }
-    ringkasanHargaHTML += `<div style="display:flex;justify-content:space-between;font-size:15px;font-weight:900;color:#5a2d0c;margin-top:6px;padding-top:6px;border-top:2px solid #5a2d0c;"><span>Total Bayar:</span><span>Rp ${totalAkhir.toLocaleString("id-ID")}</span></div>`;
-
-    teksWA += `*Data Penerima:*\nNama: ${nama}\nAlamat: ${alamat}`;
-
-    let modalVerif = document.getElementById("modal-verif-wa");
-    if (!modalVerif) {
-      modalVerif = document.createElement("div");
-      modalVerif.id = "modal-verif-wa";
-      modalVerif.className = "modal";
-      modalVerif.style.zIndex = "3500";
-      document.body.appendChild(modalVerif);
-    }
-
-    modalVerif.innerHTML = `
-      <div class="modal-box" style="max-width:390px;text-align:left;padding:18px;">
-        <button id="tutup-verif-wa" class="close-btn">✕</button>
-        <h3 style="font-size:17px;margin-bottom:4px;color:#5a2d0c;">🧾 Konfirmasi Pesanan</h3>
-        <p style="font-size:12px;color:#8c5228;margin-bottom:10px;">Periksa kembali detail pesananmu sebelum dikirim ke WhatsApp:</p>
-        <div style="background:#fef7dc;border:1.5px solid #5a2d0c;border-radius:10px;padding:10px;margin-bottom:10px;max-height:170px;overflow-y:auto;">
-          ${listHTML}
-        </div>
-        ${ringkasanHargaHTML}
-        <div style="background:#fff;border:1px solid #e6dec8;border-radius:8px;padding:8px;margin:10px 0 14px;font-size:12px;color:#5a2d0c;">
-          <div><b>Penerima:</b> ${nama}</div>
-          <div><b>Alamat:</b> ${alamat}</div>
-        </div>
-        <button id="btn-lanjut-wa" class="btn-primary full-width" style="background:#16a34a;color:#fff;border-color:#5a2d0c;font-size:14px;">✅ Lanjutkan ke WhatsApp</button>
-      </div>`;
-
-    modalVerif.classList.add("active");
-    document.getElementById("tutup-verif-wa").onclick = () => modalVerif.classList.remove("active");
-
-    document.getElementById("btn-lanjut-wa").onclick = function() {
-      this.disabled = true;
-      this.innerHTML = "⏳ Pembelian sedang diproses...";
-      setTimeout(() => {
-        window.open(`https://wa.me/6287882468521?text=${encodeURIComponent(teksWA)}`, "_blank");
-        modalVerif.classList.remove("active");
-        this.disabled = false;
-        this.innerHTML = "✅ Lanjutkan ke WhatsApp";
-      }, 900);
-    };
   };
-
-  window.sinkronKeranjangUI = () => { keranjang = JSON.parse(localStorage.getItem("keranjangCreaz")) || []; renderKeranjang(); };
-  renderKeranjang();
+  window.sinkronKeranjangUI();
+  const btnCartEl = document.getElementById("btn-cart");
+  if (btnCartEl) btnCartEl.addEventListener("click", () => window.sinkronKeranjangUI());
 });
-window.addEventListener("load", () => { window.scrollTo(0, 0); setTimeout(() => window.scrollTo(0, 0), 1600); });
-
 window.scrollTo(0, 0);
