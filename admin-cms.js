@@ -55,6 +55,7 @@
             <span class="new-price">Rp ${Number(p.harga).toLocaleString("id-ID")}</span>
             ${p.diskon ? `<span class="disc-badge">${p.diskon}</span>` : ''}
           </div>
+          <div style="font-size:10.5px;font-weight:800;color:#b91c1c;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:3px 6px;margin-bottom:8px;text-align:center;">🎉 Beli 10+ pcs Diskon 20%</div>
           <div class="card-actions">
             <button class="btn-detail" data-idx="${idx}">Detail</button>
             <button class="btn-add" data-idx="${idx}" ${!p.stok ? 'disabled' : ''}>${p.stok ? '+ Keranjang' : 'Habis'}</button>
