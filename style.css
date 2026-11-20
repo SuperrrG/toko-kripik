@@ -228,3 +228,11 @@ button:active, .btn-primary:active, .icon-btn:active, .kat-btn:active, .btn-deta
 .admin-field input, .admin-field select, .admin-field textarea { width: 100%; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13px; background: #fff; color: var(--brown); }
 .admin-item-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px; border: 1.5px solid var(--border); border-radius: 10px; margin-bottom: 8px; background: var(--bg); }
 .admin-mini-btn { padding: 5px 8px; border-radius: 6px; border: 1.5px solid var(--brown); font-size: 11px; font-weight: 800; cursor: pointer; }
+
+.hero {
+  margin: 12px 14px 4px;
+  border-radius: 18px;
+  border: 2px solid var(--brown);
+  box-shadow: 0 6px 0 rgba(90, 45, 12, 0.14);
+  background: linear-gradient(135deg, #fef7dc 0%, #fde68a 100%);
+}
