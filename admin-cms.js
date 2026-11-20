@@ -23,8 +23,22 @@
   function renderKatalog(list) {
     const grid = document.querySelector(".product-grid");
     if (!grid) return;
-    const btnSemua = document.querySelector('.kat-btn[data-kategori="semua"]');
-    if (btnSemua) btnSemua.innerText = `Semua (${list.length})`;
+    const katBar = document.querySelector(".kategori-bar");
+    if (katBar) {
+      const unikKat = [...new Set(list.map(x => x.kategori))];
+      katBar.innerHTML = `<button class="kat-btn active" data-kategori="semua">Semua (${list.length})</button>` +
+        unikKat.map(k => `<button class="kat-btn" data-kategori="${k}">${k.charAt(0).toUpperCase() + k.slice(1)}</button>`).join("");
+      katBar.querySelectorAll(".kat-btn").forEach(b => {
+        b.onclick = () => {
+          katBar.querySelectorAll(".kat-btn").forEach(x => x.classList.remove("active"));
+          b.classList.add("active");
+          const pilih = b.dataset.kategori;
+          document.querySelectorAll(".product-card").forEach(c => {
+            c.style.display = (pilih === "semua" || c.dataset.kategori.toLowerCase() === pilih.toLowerCase()) ? "flex" : "none";
+          });
+        };
+      });
+    }
 
     grid.innerHTML = list.map((p, idx) => `
       <div class="product-card" data-kategori="${p.kategori}" data-nama="${p.nama}">
@@ -113,11 +127,23 @@
           <div class="admin-field" style="flex:1;"><label>Harga Jual</label><input type="number" id="adm-harga" placeholder="10000"></div>
           <div class="admin-field" style="flex:1;"><label>Harga Coret</label><input type="number" id="adm-old" placeholder="12000"></div>
         </div>
-        <div style="display:flex; gap:8px;">
-          <div class="admin-field" style="flex:1;"><label>Kategori</label>
-            <select id="adm-kat"><option value="talas">Keripik Talas</option><option value="singkong">Keripik Singkong</option></select>
+        <div class="admin-field">
+          <label>Kategori Produk (Pencet cepat atau ketik manual)</label>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;">
+            <button type="button" class="admin-mini-btn" style="background:#fef7dc;" onclick="document.getElementById('adm-kat').value='Keripik Talas'">🥔 Keripik Talas</button>
+            <button type="button" class="admin-mini-btn" style="background:#fef7dc;" onclick="document.getElementById('adm-kat').value='Keripik Singkong'">🌿 Keripik Singkong</button>
           </div>
-          <div class="admin-field" style="flex:1;"><label>Label Promo</label><input type="text" id="adm-tag" placeholder="Baru / Terlaris"></div>
+          <input type="text" id="adm-kat" placeholder="Pilih di atas atau ketik kategori baru...">
+        </div>
+        <div class="admin-field">
+          <label>Label Promo (Pencet cepat atau ketik manual)</label>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;">
+            <button type="button" class="admin-mini-btn" style="background:#dcfce7;" onclick="document.getElementById('adm-tag').value='Terlaris'">🔥 Terlaris</button>
+            <button type="button" class="admin-mini-btn" style="background:#fee2e2;" onclick="document.getElementById('adm-tag').value='Baru'">✨ Baru</button>
+            <button type="button" class="admin-mini-btn" style="background:#fef7dc;" onclick="document.getElementById('adm-tag').value='Promo'">🏷️ Promo</button>
+            <button type="button" class="admin-mini-btn" style="background:#e0e7ff;" onclick="document.getElementById('adm-tag').value='Best Seller'">⭐ Best Seller</button>
+          </div>
+          <input type="text" id="adm-tag" placeholder="Pilih di atas atau ketik label sendiri...">
         </div>
         <div class="admin-field"><label>Foto Produk (Galeri HP)</label><input type="file" id="adm-file" accept="image/*"></div>
         <div class="admin-field"><label>Deskripsi</label><textarea id="adm-desk" rows="2">Halal, tanpa pengawet, dan tanpa pewarna buatan.</textarea></div>
@@ -138,7 +164,7 @@
       const nama = document.getElementById("adm-nama").value.trim();
       const harga = parseInt(document.getElementById("adm-harga").value) || 10000;
       const oldHarga = parseInt(document.getElementById("adm-old").value) || 0;
-      const kategori = document.getElementById("adm-kat").value;
+      const kategori = document.getElementById("adm-kat").value.trim() || "Keripik Talas";
       const tag = document.getElementById("adm-tag").value.trim() || "Favorit";
       const desk = document.getElementById("adm-desk").value.trim();
       const fileInput = document.getElementById("adm-file");
