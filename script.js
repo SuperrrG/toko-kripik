@@ -151,6 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.open(`https://wa.me/6287882468521?text=${encodeURIComponent(teks)}`, "_blank");
   };
 
+  window.sinkronKeranjangUI = () => { keranjang = JSON.parse(localStorage.getItem("keranjangCreaz")) || []; renderKeranjang(); };
   renderKeranjang();
 });
 window.addEventListener("load", () => { window.scrollTo(0, 0); setTimeout(() => window.scrollTo(0, 0), 1600); });

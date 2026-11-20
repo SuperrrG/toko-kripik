@@ -88,7 +88,13 @@
     if (ada) { ada.qty += 1; ada.img = p.img; ada.harga = Number(p.harga); }
     else k.push({ nama: p.nama, harga: Number(p.harga), img: p.img, qty: 1 });
     localStorage.setItem("keranjangCreaz", JSON.stringify(k));
-    location.reload();
+    if (typeof window.sinkronKeranjangUI === "function") window.sinkronKeranjangUI();
+    const toast = document.querySelector(".toast-notif");
+    if (toast) {
+      toast.innerText = "✅ Masuk ke keranjang!";
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1800);
+    }
   }
 
   let ketukan = 0, timerKetuk = null;
