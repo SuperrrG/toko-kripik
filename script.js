@@ -267,14 +267,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const waLink = "https" + String.fromCharCode(58,47,47) + "wa." + "me/6285185056083";
       document.getElementById("btn-lanjut-wa").onclick = function() {
-        this.disabled = true;
-        this.innerHTML = "⏳ Pembelian sedang diproses...";
-        setTimeout(() => {
+        modalVerif.classList.remove("active");
+        window.tampilLoadingAksi("💬 Memproses pesanan ke WhatsApp...", 1500, () => {
           window.open(`${waLink}?text=${encodeURIComponent(teksWA)}`, "_blank");
-          modalVerif.classList.remove("active");
-          this.disabled = false;
-          this.innerHTML = "✅ Lanjutkan ke WhatsApp";
-        }, 900);
+        });
       };
     };
   }
