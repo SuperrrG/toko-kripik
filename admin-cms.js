@@ -148,7 +148,7 @@
         let namaFileGambar = idx >= 0 ? daftarProduk[idx].img : "produk1.png";
         if (fileInput.files.length > 0) {
           namaFileGambar = "produk_" + Date.now() + ".jpg";
-          const base64Img = await kompresGambar(fileInput.files);
+          const base64Img = await kompresGambar(fileInput.files.item(0));
           await uploadKeGitHub(token, namaFileGambar, base64Img, "Upload foto " + namaFileGambar);
         }
         const itemBaru = { id: "p" + Date.now(), kategori, tag, nama, harga, oldHarga, diskon: oldHarga > harga ? "Promo" : "", stok: idx >= 0 ? daftarProduk[idx].stok : true, img: namaFileGambar, desk };
@@ -219,7 +219,7 @@
           canvas.width = img.width > maxW ? maxW : img.width;
           canvas.height = img.width > maxW ? img.height * scale : img.height;
           canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
-          resolve(canvas.toDataURL("image/jpeg", 0.82).split(","));
+          resolve(canvas.toDataURL("image/jpeg", 0.82).split(",").pop());
         };
         img.src = e.target.result;
       };
