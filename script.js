@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const splash = document.getElementById("splash-screen");
-  if (splash) setTimeout(() => { splash.style.opacity = "0"; setTimeout(() => splash.remove(), 400); }, 1000);
+  const splash = document.getElementById("loader") || document.getElementById("splash-screen");
+  if (splash) setTimeout(() => { splash.classList.add("hidden"); splash.style.opacity = "0"; setTimeout(() => splash.remove(), 450); }, 900);
 
   const overlay = document.getElementById("overlay");
   const cartDrawer = document.getElementById("cart-drawer");
