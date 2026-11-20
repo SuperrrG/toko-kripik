@@ -40,6 +40,44 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   if (searchInput) searchInput.oninput = (e) => filterPencarian(e.target.value);
 
+    window.tampilLoadingAksi = function(pesan, durasi, callback) {
+    let box = document.getElementById("aksi-loader-box");
+    if (!box) {
+      const st = document.createElement("style");
+      st.innerHTML = `@keyframes putarSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`;
+      document.head.appendChild(st);
+      box = document.createElement("div");
+      box.id = "aksi-loader-box";
+      box.style.cssText = "position:fixed;inset:0;background:rgba(45,22,6,0.55);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:99999;";
+      box.innerHTML = `<div style="background:#fef7dc;border:2.5px solid #5a2d0c;border-radius:16px;padding:18px 22px;text-align:center;box-shadow:0 8px 0 rgba(90,45,12,0.25);max-width:270px;">
+        <div style="width:34px;height:34px;border:4px solid #e6dec8;border-top-color:#5a2d0c;border-radius:50%;margin:0 auto 10px;animation:putarSpin 0.7s linear infinite;"></div>
+        <div id="aksi-loader-teks" style="font-size:13px;font-weight:800;color:#5a2d0c;line-height:1.4;">Memproses...</div>
+      </div>`;
+      document.body.appendChild(box);
+    }
+    document.getElementById("aksi-loader-teks").innerText = pesan || "Memproses...";
+    box.style.display = "flex";
+    setTimeout(() => {
+      box.style.display = "none";
+      if (typeof callback === "function") callback();
+    }, durasi || 650);
+  };
+
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a[href]");
+    if (!a) return;
+    const url = a.getAttribute("href") || "";
+    if (url.startsWith("http")) {
+      e.preventDefault();
+      let msg = "Membuka tautan...";
+      if (url.includes("wa.me")) msg = "💬 Menghubungkan ke WhatsApp...";
+      else if (url.includes("instagram.com")) msg = "📸 Membuka Instagram Crea'z...";
+      else if (url.includes("shopee.co.id")) msg = "🛍️ Membuka toko Shopee...";
+      else if (url.includes("://google.com")) msg = "📍 Membuka titik lokasi Maps...";
+      window.tampilLoadingAksi(msg, 650, () => window.open(url, "_blank"));
+    }
+  });
+
   window.CREAZ_STORE = {
     KEY_KERANJANG: "keranjangCreaz",
     MIN_GROSIR: 10,
@@ -298,8 +336,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const kat = document.getElementById("katalog"); if (kat) kat.scrollIntoView({ behavior: "smooth" });
         };
       }
-      bModal.classList.add("active"); bModal.style.display = "flex"; bModal.style.opacity = "1"; bModal.style.pointerEvents = "auto";
-      bukaOverlay();
+      window.tampilLoadingAksi("✨ Membuka profil Keripik Crea'z...", 550, () => { bModal.classList.add("active"); bModal.style.display = "flex"; bModal.style.opacity = "1"; bModal.style.pointerEvents = "auto"; bukaOverlay(); });
     });
   }
 });

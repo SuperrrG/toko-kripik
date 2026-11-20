@@ -115,9 +115,15 @@
 
     function panggilPinAdmin() {
       if (!localStorage.getItem("gh_token_creaz")) return;
-      const pin = prompt("Masukkan PIN Admin Crea'z:");
-      if (pin === PIN_ADMIN) bukaPanelAdmin();
-      else if (pin !== null) alert("PIN salah!");
+      const jalankanPrompt = () => {
+        const pin = prompt("Masukkan PIN Admin Crea'z:");
+        if (pin === PIN_ADMIN) {
+          if (window.tampilLoadingAksi) window.tampilLoadingAksi("⚙️ Memuat Panel Admin Crea'z...", 650, bukaPanelAdmin);
+          else bukaPanelAdmin();
+        } else if (pin !== null) alert("PIN salah!");
+      };
+      if (window.tampilLoadingAksi) window.tampilLoadingAksi("🔐 Membuka gerbang PIN Admin...", 500, jalankanPrompt);
+      else jalankanPrompt();
     }
 
     creditEl.addEventListener("click", (e) => {
