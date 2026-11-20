@@ -82,35 +82,73 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const btnSearch = document.getElementById("btn-search");
   if (btnSearch && searchBar) {
-    btnSearch.onclick = () => {
-      const akanBuka = !searchBar.classList.contains("active");
-      if (akanBuka && window.tampilLoadingAksi) {
-        window.tampilLoadingAksi("🔍 Menyiapkan pencarian produk...", 1600, () => {
-          searchBar.classList.add("active");
-          if (searchInput) searchInput.focus();
-        });
-      } else {
-        searchBar.classList.toggle("active");
-        if (searchBar.classList.contains("active") && searchInput) searchInput.focus();
-      }
+    btnSearch.onclick = (e) => {
+      e.preventDefault();
+      searchBar.classList.toggle("active");
+      if (searchBar.classList.contains("active") && searchInput) searchInput.focus();
     };
   }
   const closeSearch = document.getElementById("close-search");
   if (closeSearch && searchBar) {
-    closeSearch.onclick = () => { searchBar.classList.remove("active"); if (searchInput) { searchInput.value = ""; filterPencarian(""); } };
+    closeSearch.onclick = () => {
+      searchBar.classList.remove("active");
+      if (searchInput) {
+        searchInput.value = "";
+        document.querySelectorAll(".product-card").forEach(c => c.style.display = "flex");
+      }
+    };
   }
-  function filterPencarian(q) {
-    const kata = q.toLowerCase().trim();
-    document.querySelectorAll(".product-card").forEach(c => {
-      const nama = (c.dataset.nama || c.innerText).toLowerCase();
-      c.style.display = nama.includes(kata) ? "flex" : "none";
-    });
-  }
-  if (searchInput) searchInput.oninput = (e) => filterPencarian(e.target.value);
 
-      window.alert = function(pesan) {
-    if (typeof window.creazAlert === "function") return window.creazAlert(pesan);
-  };
+  let timerKetikCari = null;
+  function prosesPencarianFinal(kataMentah) {
+    const kata = (kataMentah || "").toLowerCase().trim();
+    const semuaKartu = document.querySelectorAll(".product-card");
+    if (!kata) {
+      semuaKartu.forEach(c => c.style.display = "flex");
+      return;
+    }
+    const eksekusiFilter = () => {
+      let jumlahCocok = 0;
+      semuaKartu.forEach(c => {
+        const teksKartu = (c.dataset.nama || c.innerText || "").toLowerCase();
+        if (teksKartu.includes(kata)) {
+          c.style.display = "flex";
+          jumlahCocok++;
+        } else {
+          c.style.display = "none";
+        }
+      });
+      if (jumlahCocok === 0) {
+        semuaKartu.forEach(c => c.style.display = "flex");
+        window.creazAlert(`Produk "${kataMentah.trim()}" belum tersedia. Coba cari varian rasa lain ya!`, "Produk Tidak Ditemukan", "🔍");
+      }
+    };
+
+    if (typeof window.tampilLoadingAksi === "function") {
+      window.tampilLoadingAksi(`🔍 Mencari "${kataMentah.trim()}"...`, 1400, eksekusiFilter);
+    } else {
+      eksekusiFilter();
+    }
+  }
+
+  if (searchInput) {
+    searchInput.oninput = (e) => {
+      clearTimeout(timerKetikCari);
+      const val = e.target.value;
+      if (!val.trim()) {
+        document.querySelectorAll(".product-card").forEach(c => c.style.display = "flex");
+        return;
+      }
+      timerKetikCari = setTimeout(() => prosesPencarianFinal(val), 800);
+    };
+    searchInput.onkeydown = (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        clearTimeout(timerKetikCari);
+        prosesPencarianFinal(searchInput.value);
+      }
+    };
+  }
 
   window.tampilLoadingAksi = function(pesan, durasi, callback) {
     let box = document.getElementById("aksi-loader-box");
