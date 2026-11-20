@@ -98,7 +98,10 @@
     modal.innerHTML = `
       <div class="modal-box admin-modal-box">
         <button id="tutup-admin" class="close-btn">✕</button>
-        <h3 style="margin-bottom:12px;">⚙️ Kelola Produk Crea'z</h3>
+        <div style="background:#fef7dc;border:1.5px solid #5a2d0c;border-radius:12px;padding:10px 12px;margin-bottom:14px;text-align:center;">
+          <h3 style="margin:0;font-size:17px;color:#5a2d0c;">⚙️ Kelola Produk Crea'z</h3>
+          <small style="display:block;margin-top:3px;font-size:11px;font-weight:800;color:#8c5228;">Created by SuperG &bull; Designed by M.A.Y</small>
+        </div>
         <div class="admin-field" style="display:${tokenTersimpan ? 'none' : 'block'};">
           <label>Kunci Token GitHub</label>
           <input type="password" id="adm-token" value="${tokenTersimpan}" placeholder="Tempel token di sini">
