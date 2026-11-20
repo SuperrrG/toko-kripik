@@ -55,7 +55,7 @@
     "harga": 8000,
     "oldHarga": 10000,
     "diskon": "-20%",
-    "stok": false,
+    "stok": true,
     "img": "produk1.png",
     "desk": "Keripik talas dengan rasa alami yang gurih dan renyah. Halal, tanpa pengawet, dan tanpa pewarna buatan."
   },
