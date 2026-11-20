@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const splash = document.getElementById("loading-screen") || document.getElementById("splash-screen");
-  if (splash) setTimeout(() => { splash.classList.add("hidden"); splash.style.opacity = "0"; setTimeout(() => splash.remove(), 450); }, 1500);
+  if (splash) setTimeout(() => { splash.classList.add("hidden"); splash.style.opacity = "0"; setTimeout(() => splash.remove(), 450); }, 3000);
 
   const overlay = document.getElementById("overlay");
   const cartDrawer = document.getElementById("cart-drawer");
@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
       toast.style.transform = "translateX(-50%) scale(1.08)";
       setTimeout(() => toast.style.transform = "translateX(-50%) scale(1)", 130);
       clearTimeout(window._toastTimer);
-      window._toastTimer = setTimeout(() => { toast.style.opacity = "0"; setTimeout(() => toast.style.display = "none", 200); }, 1500);
+      window._toastTimer = setTimeout(() => { toast.style.opacity = "0"; setTimeout(() => toast.style.display = "none", 200); }, 3000);
     },
 
     renderKeranjang() {
