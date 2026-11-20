@@ -1,72 +1,51 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const nomorWA = "6287882468521";
-  let keranjang = JSON.parse(localStorage.getItem("keranjangCreaz")) || [];
-  let produkAktif = null;
+  const splash = document.getElementById("splash-screen");
+  if (splash) setTimeout(() => { splash.style.opacity = "0"; setTimeout(() => splash.remove(), 400); }, 1000);
 
-  const loader = document.getElementById("loading-screen");
-  const loaderText = document.getElementById("loading-text");
-  setTimeout(() => loader.classList.add("hide"), 1500);
-
-  function tampilkanLoading(teks, aksi) {
-    loaderText.innerText = teks;
-    loader.classList.remove("hide");
-    setTimeout(() => { aksi(); loader.classList.add("hide"); }, 1000);
-  }
-
-  const searchBar = document.getElementById("search-bar");
-  const searchInput = document.getElementById("search-input");
+  const overlay = document.getElementById("overlay");
   const cartDrawer = document.getElementById("cart-drawer");
   const detailModal = document.getElementById("detail-modal");
-  const overlay = document.getElementById("overlay");
+  const searchBar = document.getElementById("search-bar");
+  const searchInput = document.getElementById("search-input");
 
-  document.getElementById("btn-search").onclick = () => {
-    searchBar.classList.toggle("active");
-    if (searchBar.classList.contains("active")) searchInput.focus();
-  };
+  function bukaOverlay() { if (overlay) overlay.classList.add("active"); document.body.classList.add("no-scroll"); }
+  function tutupSemua() {
+    if (overlay) overlay.classList.remove("active");
+    if (cartDrawer) cartDrawer.classList.remove("active");
+    if (detailModal) detailModal.classList.remove("active");
+    const adm = document.getElementById("admin-modal"); if (adm) adm.classList.remove("active");
+    const verif = document.getElementById("modal-verif-wa"); if (verif) verif.classList.remove("active");
+    document.body.classList.remove("no-scroll");
+  }
 
-  function jalankanPencarian() {
-    const kata = searchInput.value.toLowerCase();
-    tampilkanLoading("Mencari produk...", () => {
-      document.querySelectorAll(".product-card").forEach(card => {
-        card.style.display = card.dataset.nama.toLowerCase().includes(kata) ? "flex" : "none";
-      });
+  if (overlay) overlay.onclick = tutupSemua;
+  const closeCart = document.getElementById("close-cart"); if (closeCart) closeCart.onclick = tutupSemua;
+  const closeModal = document.getElementById("close-modal"); if (closeModal) closeModal.onclick = tutupSemua;
+
+  const btnSearch = document.getElementById("btn-search");
+  if (btnSearch && searchBar) {
+    btnSearch.onclick = () => { searchBar.classList.toggle("active"); if (searchBar.classList.contains("active") && searchInput) searchInput.focus(); };
+  }
+  const closeSearch = document.getElementById("close-search");
+  if (closeSearch && searchBar) {
+    closeSearch.onclick = () => { searchBar.classList.remove("active"); if (searchInput) { searchInput.value = ""; filterPencarian(""); } };
+  }
+  function filterPencarian(q) {
+    const kata = q.toLowerCase().trim();
+    document.querySelectorAll(".product-card").forEach(c => {
+      const nama = (c.dataset.nama || c.innerText).toLowerCase();
+      c.style.display = nama.includes(kata) ? "flex" : "none";
     });
   }
-  document.getElementById("btn-cari-aksi").onclick = jalankanPencarian;
-  searchInput.addEventListener("keypress", e => { if (e.key === "Enter") jalankanPencarian(); });
+  if (searchInput) searchInput.oninput = (e) => filterPencarian(e.target.value);
 
-  const brandModal = document.createElement("div");
-  brandModal.id = "brand-modal";
-  brandModal.className = "modal";
-  brandModal.innerHTML = `
-    <div class="modal-box">
-      <button id="close-brand-modal" class="close-btn">✕</button>
-      <img src="logo.jpg" alt="Keripik Crea'z" class="brand-modal-logo" onerror="this.style.display='none'">
-      <h2 style="font-size:20px; font-weight:900;">Keripik Crea'z</h2>
-      <p style="font-size:12px; font-weight:800; color:#8c5228; margin-top:2px;">• NIKMAT SETIAP GIGITAN •</p>
-      <div class="brand-badges"><span>✅ Halal</span><span>🌿 Tanpa Pengawet</span><span>🎨 Tanpa Pewarna</span></div>
-      <p class="modal-desc" style="margin-bottom:10px;">Keripik talas & singkong renyah khas Desa Kaligending, Karangsambung, Kebumen.</p>
-      <div class="brand-kontak-grup">
-        <a href="https://wa.me/6287882468521" target="_blank" class="brand-kontak-btn btn-wa-brand"><svg width="18" height="18" style="width:18px;height:18px;flex-shrink:0;fill:currentColor;" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zm5.82 14.01c-.25.7-1.44 1.34-2.01 1.42-.52.08-1.18.11-1.9-.12-.44-.14-1-.33-1.72-.64-3.03-1.31-5.01-4.36-5.16-4.56-.15-.2-1.23-1.64-1.23-3.13 0-1.49.78-2.22 1.06-2.52.28-.3.61-.38.81-.38.2 0 .41.01.58.01.19 0 .44-.07.69.53.25.61.86 2.1.94 2.25.08.15.13.33.03.53-.1.2-.15.33-.3.51-.15.18-.32.4-.45.53-.15.15-.31.31-.13.61.18.3.79 1.3 1.7 2.11 1.17 1.04 2.15 1.36 2.45 1.51.3.15.48.13.66-.08.18-.2.76-.88.96-1.18.2-.3.4-.25.68-.15.28.1 1.77.83 2.07.98.3.15.51.23.58.35.08.13.08.73-.17 1.43z"/></svg> <span>Chat WhatsApp: 0878-8246-8521</span></a>
-        <a href="https://www.instagram.com/creaz_snack?evlk=MWltOGdiaXM1djBvag==" target="_blank" class="brand-kontak-btn btn-ig-brand"><svg width="18" height="18" style="width:18px;height:18px;flex-shrink:0;fill:currentColor;" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2zm-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6zm9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25zM12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg> <span>Follow Instagram: @creaz_snack</span></a>
-      </div>
-      <button id="btn-lanjut-brand" class="btn-primary full-width">Lanjut Lihat Produk</button>
-    </div>`;
-  document.body.appendChild(brandModal);
-
-  function bukaOverlay() { overlay.classList.add("active"); document.documentElement.classList.add("no-scroll"); document.body.classList.add("no-scroll"); }
-  function tutupSemua() {
-    cartDrawer.classList.remove("active"); detailModal.classList.remove("active"); brandModal.classList.remove("active");
-    overlay.classList.remove("active"); document.documentElement.classList.remove("no-scroll"); document.body.classList.remove("no-scroll");
-  }
-
-  document.getElementById("btn-cart").onclick = () => { if (typeof window.CREAZ_STORE = {
+  window.CREAZ_STORE = {
     KEY_KERANJANG: "keranjangCreaz",
     MIN_GROSIR: 10,
     DISKON_GROSIR: 0.20,
 
     ambilKeranjang() {
-      return JSON.parse(localStorage.getItem(this.KEY_KERANJANG)) || [];
+      try { return JSON.parse(localStorage.getItem(this.KEY_KERANJANG)) || []; } catch (e) { return []; }
     },
 
     simpanKeranjang(data) {
@@ -79,10 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const ada = data.find(i => i.nama === p.nama);
       let qtyItem = 1;
       if (ada) {
-        ada.qty += 1;
-        ada.img = p.img;
-        ada.harga = Number(p.harga);
-        qtyItem = ada.qty;
+        ada.qty += 1; ada.img = p.img; ada.harga = Number(p.harga); qtyItem = ada.qty;
       } else {
         data.push({ nama: p.nama, harga: Number(p.harga), img: p.img || "produk1.png", qty: 1 });
       }
@@ -104,8 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.appendChild(toast);
       }
       toast.innerText = `✅ +1 Masuk keranjang (${qtyItem}x • Total ${totalQty} pcs)`;
-      toast.style.opacity = "1";
-      toast.style.display = "block";
+      toast.style.opacity = "1"; toast.style.display = "block";
       toast.style.transform = "translateX(-50%) scale(1.08)";
       setTimeout(() => toast.style.transform = "translateX(-50%) scale(1)", 130);
       clearTimeout(window._toastTimer);
@@ -124,8 +99,8 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         let html = `<div style="text-align:right;margin-bottom:8px;"><button type="button" id="btn-kosong-cart" style="background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:800;cursor:pointer;">🗑️ Kosongkan Keranjang</button></div>`;
         data.forEach((item, i) => {
-          const sub = item.harga * item.qty;
-          totalHarga += sub; totalQty += item.qty;
+          const sub = Number(item.harga) * Number(item.qty);
+          totalHarga += sub; totalQty += Number(item.qty);
           html += `
             <div class="cart-item" style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #e6dec8;">
               <img src="${item.img || "produk1.png"}" alt="${item.nama}" style="width:52px;height:52px;object-fit:cover;border-radius:8px;border:1.5px solid #5a2d0c;flex-shrink:0;">
@@ -172,6 +147,18 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   };
+
+  window.sinkronKeranjangUI = () => window.CREAZ_STORE.renderKeranjang();
+  window.CREAZ_STORE.renderKeranjang();
+
+  const btnCartEl = document.getElementById("btn-cart");
+  if (btnCartEl && cartDrawer) {
+    btnCartEl.onclick = () => {
+      window.CREAZ_STORE.renderKeranjang();
+      cartDrawer.classList.add("active");
+      bukaOverlay();
+    };
+  }
 
   const btnCheckoutEl = document.getElementById("checkout-wa");
   if (btnCheckoutEl) {
@@ -239,11 +226,12 @@ document.addEventListener("DOMContentLoaded", () => {
       modalVerif.classList.add("active");
       document.getElementById("tutup-verif-wa").onclick = () => modalVerif.classList.remove("active");
 
+      const waLink = "https" + String.fromCharCode(58,47,47) + "wa." + "me/6287882468521";
       document.getElementById("btn-lanjut-wa").onclick = function() {
         this.disabled = true;
         this.innerHTML = "⏳ Pembelian sedang diproses...";
         setTimeout(() => {
-          window.open(`https://wa.me/6287882468521?text=${encodeURIComponent(teksWA)}`, "_blank");
+          window.open(`${waLink}?text=${encodeURIComponent(teksWA)}`, "_blank");
           modalVerif.classList.remove("active");
           this.disabled = false;
           this.innerHTML = "✅ Lanjutkan ke WhatsApp";
@@ -251,11 +239,5 @@ document.addEventListener("DOMContentLoaded", () => {
       };
     };
   }
-
-  window.sinkronKeranjangUI = () => window.CREAZ_STORE.renderKeranjang();
-  window.CREAZ_STORE.renderKeranjang();
-
-  const btnCartEl = document.getElementById("btn-cart");
-  if (btnCartEl) btnCartEl.addEventListener("click", () => window.CREAZ_STORE.renderKeranjang());
 });
 window.scrollTo(0, 0);
