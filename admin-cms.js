@@ -26,6 +26,29 @@
     const katBar = document.querySelector(".kategori-bar");
     if (katBar) {
       const unikKat = [...new Set(list.map(x => x.kategori))];
+      katBar.style.cssText += ";display:flex;align-items:center;gap:6px;overflow-x:auto;scroll-behavior:smooth;cursor:grab;padding-bottom:6px;";
+      if (!document.getElementById("kat-nav-wrap")) {
+        const wrap = document.createElement("div");
+        wrap.id = "kat-nav-wrap";
+        wrap.style.cssText = "position:relative;display:flex;align-items:center;gap:4px;margin-bottom:10px;";
+        katBar.parentNode.insertBefore(wrap, katBar);
+        const btnL = document.createElement("button");
+        btnL.type = "button"; btnL.innerText = "‹";
+        btnL.style.cssText = "background:#fef7dc;border:1.5px solid #5a2d0c;color:#5a2d0c;border-radius:8px;width:28px;height:32px;font-weight:900;font-size:16px;cursor:pointer;flex-shrink:0;";
+        const btnR = document.createElement("button");
+        btnR.type = "button"; btnR.innerText = "›";
+        btnR.style.cssText = btnL.style.cssText;
+        wrap.appendChild(btnL); wrap.appendChild(katBar); wrap.appendChild(btnR);
+        katBar.style.marginBottom = "0"; katBar.style.flex = "1";
+        btnL.onclick = () => katBar.scrollBy({ left: -140, behavior: "smooth" });
+        btnR.onclick = () => katBar.scrollBy({ left: 140, behavior: "smooth" });
+
+        let isDown = false, startX, scrollLeft;
+        katBar.addEventListener("mousedown", e => { isDown = true; katBar.style.cursor = "grabbing"; startX = e.pageX - katBar.offsetLeft; scrollLeft = katBar.scrollLeft; });
+        katBar.addEventListener("mouseleave", () => { isDown = false; katBar.style.cursor = "grab"; });
+        katBar.addEventListener("mouseup", () => { isDown = false; katBar.style.cursor = "grab"; });
+        katBar.addEventListener("mousemove", e => { if (!isDown) return; e.preventDefault(); const x = e.pageX - katBar.offsetLeft; katBar.scrollLeft = scrollLeft - (x - startX) * 1.5; });
+      }
       katBar.innerHTML = `<button class="kat-btn active" data-kategori="semua">Semua</button>` +
         unikKat.map(k => `<button class="kat-btn" data-kategori="${k}">${k.charAt(0).toUpperCase() + k.slice(1)}</button>`).join("");
       katBar.querySelectorAll(".kat-btn").forEach(b => {
