@@ -99,6 +99,7 @@
       ketukan++; clearTimeout(timerKetuk); timerKetuk = setTimeout(() => ketukan = 0, 1500);
       if (ketukan >= 5) {
         ketukan = 0;
+        if (!localStorage.getItem("gh_token_creaz")) return;
         const pin = prompt("Masukkan PIN Admin Crea'z:");
         if (pin === PIN_ADMIN) bukaPanelAdmin();
         else if (pin !== null) alert("PIN salah!");
