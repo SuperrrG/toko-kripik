@@ -85,21 +85,36 @@
 
   function tambahKeKeranjangGlobal(p) { if (window.CREAZ_STORE) window.CREAZ_STORE.tambahProduk(p); }
 
-  let ketukan = 0, timerKetuk = null;
+  let ketukan = 0, timerKetuk = null, timerTahan = null;
   const creditEl = document.querySelector(".credits-tag");
   if (creditEl) {
-    creditEl.style.cursor = "pointer";
-    creditEl.addEventListener("click", () => {
-      ketukan++; clearTimeout(timerKetuk); timerKetuk = setTimeout(() => ketukan = 0, 1500);
+    creditEl.style.cssText += ";cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;padding:8px 12px;display:inline-block;";
+
+    function panggilPinAdmin() {
+      if (!localStorage.getItem("gh_token_creaz")) return;
+      const pin = prompt("Masukkan PIN Admin Crea'z:");
+      if (pin === PIN_ADMIN) bukaPanelAdmin();
+      else if (pin !== null) alert("PIN salah!");
+    }
+
+    creditEl.addEventListener("click", (e) => {
+      e.preventDefault();
+      ketukan++;
+      clearTimeout(timerKetuk);
+      timerKetuk = setTimeout(() => ketukan = 0, 2500);
       if (ketukan >= 5) {
         ketukan = 0;
-        if (!localStorage.getItem("gh_token_creaz")) return;
-        const pin = prompt("Masukkan PIN Admin Crea'z:");
-        if (pin === PIN_ADMIN) bukaPanelAdmin();
-        else if (pin !== null) alert("PIN salah!");
+        panggilPinAdmin();
       }
     });
+
+    creditEl.addEventListener("touchstart", () => {
+      timerTahan = setTimeout(() => { ketukan = 0; panggilPinAdmin(); }, 1500);
+    }, { passive: true });
+    creditEl.addEventListener("touchend", () => clearTimeout(timerTahan));
+    creditEl.addEventListener("touchmove", () => clearTimeout(timerTahan));
   }
+
   function bukaPanelAdmin() {
     let modal = document.getElementById("admin-modal");
     if (!modal) { modal = document.createElement("div"); modal.id = "admin-modal"; modal.className = "modal"; document.body.appendChild(modal); }
