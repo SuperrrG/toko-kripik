@@ -173,6 +173,85 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  const btnCheckoutEl = document.getElementById("checkout-wa");
+  if (btnCheckoutEl) {
+    btnCheckoutEl.onclick = () => {
+      const keranjang = window.CREAZ_STORE.ambilKeranjang();
+      if (keranjang.length === 0) return alert("Pilih produk Crea'z dulu ya!");
+      const nama = document.getElementById("nama-pemesan").value.trim();
+      const alamat = document.getElementById("alamat-pemesan").value.trim();
+      if (!nama || !alamat) return alert("Mohon isi Nama dan Alamat pengiriman dulu ya!");
+
+      let subAll = 0, qtyAll = 0, listHTML = "";
+      let teksWA = `Halo Kak, saya mau pesan *Keripik Crea'z*:\n\n`;
+
+      keranjang.forEach((item, idx) => {
+        const sub = item.harga * item.qty;
+        subAll += sub; qtyAll += item.qty;
+        listHTML += `<div style="display:flex;justify-content:space-between;font-size:12.5px;padding:4px 0;border-bottom:1px dashed #e6dec8;">
+          <span>${idx + 1}. <b>${item.nama}</b> (${item.qty}x)</span>
+          <span style="font-weight:700;">Rp ${sub.toLocaleString("id-ID")}</span>
+        </div>`;
+        teksWA += `${idx + 1}. *${item.nama}* (${item.qty}x @ Rp ${item.harga.toLocaleString("id-ID")}) = Rp ${sub.toLocaleString("id-ID")}\n`;
+      });
+
+      const pot = qtyAll >= window.CREAZ_STORE.MIN_GROSIR ? Math.round(subAll * window.CREAZ_STORE.DISKON_GROSIR) : 0;
+      const totalAkhir = subAll - pot;
+
+      let ringkasanHTML = `<div style="display:flex;justify-content:space-between;font-size:12.5px;margin-top:8px;"><span>Total Barang (${qtyAll} pcs):</span><span>Rp ${subAll.toLocaleString("id-ID")}</span></div>`;
+      if (pot > 0) {
+        ringkasanHTML += `<div style="display:flex;justify-content:space-between;font-size:12.5px;color:#15803d;font-weight:800;"><span>🎉 Diskon Grosir 20%:</span><span>-Rp ${pot.toLocaleString("id-ID")}</span></div>`;
+        teksWA += `\nSubtotal (${qtyAll} pcs): Rp ${subAll.toLocaleString("id-ID")}`;
+        teksWA += `\n🎉 *Diskon Grosir 20% (≥10 pcs): -Rp ${pot.toLocaleString("id-ID")}*`;
+        teksWA += `\n*Total Bayar: Rp ${totalAkhir.toLocaleString("id-ID")}*\n\n`;
+      } else {
+        teksWA += `\n*Total Belanja (${qtyAll} pcs): Rp ${subAll.toLocaleString("id-ID")}*\n\n`;
+      }
+      ringkasanHTML += `<div style="display:flex;justify-content:space-between;font-size:15px;font-weight:900;color:#5a2d0c;margin-top:6px;padding-top:6px;border-top:2px solid #5a2d0c;"><span>Total Bayar:</span><span>Rp ${totalAkhir.toLocaleString("id-ID")}</span></div>`;
+
+      teksWA += `*Data Penerima:*\nNama: ${nama}\nAlamat: ${alamat}`;
+
+      let modalVerif = document.getElementById("modal-verif-wa");
+      if (!modalVerif) {
+        modalVerif = document.createElement("div");
+        modalVerif.id = "modal-verif-wa";
+        modalVerif.className = "modal";
+        modalVerif.style.zIndex = "3500";
+        document.body.appendChild(modalVerif);
+      }
+
+      modalVerif.innerHTML = `
+        <div class="modal-box" style="max-width:390px;text-align:left;padding:18px;">
+          <button id="tutup-verif-wa" class="close-btn">✕</button>
+          <h3 style="font-size:17px;margin-bottom:4px;color:#5a2d0c;">🧾 Konfirmasi Pesanan</h3>
+          <p style="font-size:12px;color:#8c5228;margin-bottom:10px;">Periksa kembali detail pesananmu sebelum dikirim ke WhatsApp:</p>
+          <div style="background:#fef7dc;border:1.5px solid #5a2d0c;border-radius:10px;padding:10px;margin-bottom:10px;max-height:170px;overflow-y:auto;">
+            ${listHTML}
+          </div>
+          ${ringkasanHTML}
+          <div style="background:#fff;border:1px solid #e6dec8;border-radius:8px;padding:8px;margin:10px 0 14px;font-size:12px;color:#5a2d0c;">
+            <div><b>Penerima:</b> ${nama}</div>
+            <div><b>Alamat:</b> ${alamat}</div>
+          </div>
+          <button id="btn-lanjut-wa" class="btn-primary full-width" style="background:#16a34a;color:#fff;border-color:#5a2d0c;font-size:14px;">✅ Lanjutkan ke WhatsApp</button>
+        </div>`;
+
+      modalVerif.classList.add("active");
+      document.getElementById("tutup-verif-wa").onclick = () => modalVerif.classList.remove("active");
+
+      document.getElementById("btn-lanjut-wa").onclick = function() {
+        this.disabled = true;
+        this.innerHTML = "⏳ Pembelian sedang diproses...";
+        setTimeout(() => {
+          window.open(`https://wa.me/6287882468521?text=${encodeURIComponent(teksWA)}`, "_blank");
+          modalVerif.classList.remove("active");
+          this.disabled = false;
+          this.innerHTML = "✅ Lanjutkan ke WhatsApp";
+        }, 900);
+      };
+    };
+  }
+
   window.sinkronKeranjangUI = () => window.CREAZ_STORE.renderKeranjang();
   window.CREAZ_STORE.renderKeranjang();
 
