@@ -246,23 +246,56 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       let bModal = document.getElementById("brand-modal");
       if (!bModal) {
+        const st = document.createElement("style");
+        st.innerHTML = `@keyframes hujanJatuh { 0% { transform: translateY(-20px) rotate(0deg); opacity: 0.9; } 100% { transform: translateY(390px) rotate(320deg); opacity: 0; } } .partikel-hujan { position: absolute; top: -20px; pointer-events: none; font-size: 15px; animation: hujanJatuh linear infinite; z-index: 1; }`;
+        document.head.appendChild(st);
+
         bModal = document.createElement("div");
         bModal.id = "brand-modal";
         bModal.className = "modal";
         bModal.innerHTML = `
-          <div class="modal-box" style="max-width:360px;text-align:center;padding:22px 18px;">
-            <button id="tutup-brand" class="close-btn">✕</button>
-            <img src="logo.jpg" alt="Logo Crea'Z" style="width:92px;height:92px;border-radius:50%;object-fit:cover;border:3px solid #5a2d0c;margin:0 auto 10px;">
-            <h3 style="font-size:19px;margin-bottom:2px;color:#5a2d0c;">Keripik Crea'z</h3>
-            <p style="font-size:11px;font-weight:800;color:#8c5228;letter-spacing:1px;margin-bottom:10px;">NIKMAT SETIAP GIGITAN</p>
-            <p style="font-size:12.5px;color:#5a2d0c;line-height:1.5;margin-bottom:12px;">Camilan renyah dari bahan pilihan alami. 100% Halal, tanpa pengawet, dan tanpa pewarna buatan.<br>📍 Desa Kaligending, Karangsambung, Kebumen.</p>
-            <div style="display:flex;flex-direction:column;gap:8px;">
-              <a href="https://wa.me/6287882468521" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#22c55e;color:#fff;font-weight:800;font-size:13px;padding:10px;border-radius:10px;border:1.5px solid #5a2d0c;text-decoration:none;"><svg width="18" height="18" style="width:18px;height:18px;flex-shrink:0;fill:currentColor;" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zm5.82 14.01c-.25.7-1.44 1.34-2.01 1.42-.52.08-1.18.11-1.9-.12-.44-.14-1-.33-1.72-.64-3.03-1.31-5.01-4.36-5.16-4.56-.15-.2-1.23-1.64-1.23-3.13 0-1.49.78-2.22 1.06-2.52.28-.3.61-.38.81-.38.2 0 .41.01.58.01.19 0 .44-.07.69.53.25.61.86 2.1.94 2.25.08.15.13.33.03.53-.1.2-.15.33-.3.51-.15.18-.32.4-.45.53-.15.15-.31.31-.13.61.18.3.79 1.3 1.7 2.11 1.17 1.04 2.15 1.36 2.45 1.51.3.15.48.13.66-.08.18-.2.76-.88.96-1.18.2-.3.4-.25.68-.15.28.1 1.77.83 2.07.98.3.15.51.23.58.35.08.13.08.73-.17 1.43z"/></svg> <span>Chat WhatsApp: 0878-8246-8521</span></a>
-              <a href="https://instagram.com/creaz_snack" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#f4be2c;color:#5a2d0c;font-weight:800;font-size:13px;padding:10px;border-radius:10px;border:1.5px solid #5a2d0c;text-decoration:none;"><svg width="18" height="18" style="width:18px;height:18px;flex-shrink:0;fill:currentColor;" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2zm-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6zm9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25zM12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg> <span>Follow Instagram: @creaz_snack</span></a>
+          <div class="modal-box" style="position:relative;overflow:hidden;max-width:365px;text-align:center;padding:22px 18px;border:2.5px solid #5a2d0c;border-radius:20px;background:linear-gradient(180deg,#fef7dc 0%,#fffdf7 100%);box-shadow:0 10px 0 rgba(90,45,12,0.2);">
+            <div id="wadah-hujan" style="position:absolute;inset:0;overflow:hidden;pointer-events:none;"></div>
+            <button id="tutup-brand" class="close-btn" style="position:relative;z-index:3;">✕</button>
+            <div style="position:relative;z-index:2;">
+              <img src="logo.jpg" alt="Logo Crea'Z" style="width:94px;height:94px;border-radius:50%;object-fit:cover;border:3px solid #5a2d0c;box-shadow:0 4px 10px rgba(90,45,12,0.2);margin:0 auto 10px;">
+              <h3 style="font-size:20px;font-weight:900;margin-bottom:2px;color:#5a2d0c;">Keripik Crea'z</h3>
+              <p style="font-size:10.5px;font-weight:800;color:#8c5228;letter-spacing:1.2px;margin-bottom:10px;">NIKMAT SETIAP GIGITAN</p>
+              <div style="display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin-bottom:10px;">
+                <span style="background:#5a2d0c;color:#fef7dc;font-size:10px;font-weight:800;padding:3px 9px;border-radius:99px;">✅ 100% Halal</span>
+                <span style="background:#f4be2c;color:#5a2d0c;border:1px solid #5a2d0c;font-size:10px;font-weight:800;padding:3px 9px;border-radius:99px;">🌿 Tanpa Pengawet</span>
+              </div>
+              <div style="background:#fff;border:1.5px solid #e6dec8;border-radius:12px;padding:10px;margin-bottom:12px;text-align:left;font-size:12px;color:#5a2d0c;line-height:1.55;">
+                <div style="margin-bottom:4px;">🥔 <b>Produk:</b> Aneka keripik &amp; camilan renyah pilihan alami.</div>
+                <div style="margin-bottom:4px;">📍 <b>Produksi:</b> Desa Kaligending, Kec. Karangsambung, Kab. Kebumen.</div>
+                <div>⏰ <b>Layanan Order:</b> Setiap hari (08.00 – 21.00 WIB)</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <button type="button" id="btn-lihat-produk-brand" style="width:100%;background:#5a2d0c;color:#fef7dc;font-weight:800;font-size:13px;padding:10px;border-radius:10px;border:1.5px solid #5a2d0c;cursor:pointer;">🛍️ Lihat Semua Produk</button>
+                <a href="https://wa.me/6287882468521" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#22c55e;color:#fff;font-weight:800;font-size:13px;padding:10px;border-radius:10px;border:1.5px solid #5a2d0c;text-decoration:none;"><svg width="18" height="18" style="width:18px;height:18px;flex-shrink:0;fill:currentColor;" viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zm5.82 14.01c-.25.7-1.44 1.34-2.01 1.42-.52.08-1.18.11-1.9-.12-.44-.14-1-.33-1.72-.64-3.03-1.31-5.01-4.36-5.16-4.56-.15-.2-1.23-1.64-1.23-3.13 0-1.49.78-2.22 1.06-2.52.28-.3.61-.38.81-.38.2 0 .41.01.58.01.19 0 .44-.07.69.53.25.61.86 2.1.94 2.25.08.15.13.33.03.53-.1.2-.15.33-.3.51-.15.18-.32.4-.45.53-.15.15-.31.31-.13.61.18.3.79 1.3 1.7 2.11 1.17 1.04 2.15 1.36 2.45 1.51.3.15.48.13.66-.08.18-.2.76-.88.96-1.18.2-.3.4-.25.68-.15.28.1 1.77.83 2.07.98.3.15.51.23.58.35.08.13.08.73-.17 1.43z"/></svg> <span>Chat WhatsApp: 0878-8246-8521</span></a>
+                <a href="https://instagram.com/creaz_snack" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#f4be2c;color:#5a2d0c;font-weight:800;font-size:13px;padding:10px;border-radius:10px;border:1.5px solid #5a2d0c;text-decoration:none;"><svg width="18" height="18" style="width:18px;height:18px;flex-shrink:0;fill:currentColor;" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2zm-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6zm9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25zM12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg> <span>Follow Instagram: @creaz_snack</span></a>
+              </div>
             </div>
           </div>`;
         document.body.appendChild(bModal);
+
+        const wadahHujan = document.getElementById("wadah-hujan");
+        const ikonHujan = ["🍃", "✨", "🥔", "🌿"];
+        for (let i = 0; i < 16; i++) {
+          const p = document.createElement("span");
+          p.className = "partikel-hujan";
+          p.innerText = ikonHujan[i % ikonHujan.length];
+          p.style.left = (Math.random() * 94) + "%";
+          p.style.animationDuration = (2.8 + Math.random() * 2.5) + "s";
+          p.style.animationDelay = (Math.random() * 2.5) + "s";
+          wadahHujan.appendChild(p);
+        }
+
         document.getElementById("tutup-brand").onclick = () => { bModal.classList.remove("active"); bModal.style.display = "none"; tutupSemua(); };
+        document.getElementById("btn-lihat-produk-brand").onclick = () => {
+          bModal.classList.remove("active"); bModal.style.display = "none"; tutupSemua();
+          const kat = document.getElementById("katalog"); if (kat) kat.scrollIntoView({ behavior: "smooth" });
+        };
       }
       bModal.classList.add("active"); bModal.style.display = "flex"; bModal.style.opacity = "1"; bModal.style.pointerEvents = "auto";
       bukaOverlay();
