@@ -26,7 +26,7 @@
     const katBar = document.querySelector(".kategori-bar");
     if (katBar) {
       const unikKat = [...new Set(list.map(x => x.kategori))];
-      katBar.innerHTML = `<button class="kat-btn active" data-kategori="semua">Semua (${list.length})</button>` +
+      katBar.innerHTML = `<button class="kat-btn active" data-kategori="semua">Semua</button>` +
         unikKat.map(k => `<button class="kat-btn" data-kategori="${k}">${k.charAt(0).toUpperCase() + k.slice(1)}</button>`).join("");
       katBar.querySelectorAll(".kat-btn").forEach(b => {
         b.onclick = () => {
