@@ -70,5 +70,17 @@
     "stok": true,
     "img": "produk2.png",
     "desk": "Keripik talas rasa balado yang gurih dan pedas. Halal, tanpa pengawet, dan tanpa pewarna buatan."
+  },
+  {
+    "id": "p1795145610571",
+    "kategori": "singkong",
+    "tag": "baru",
+    "nama": "Balck matcha",
+    "harga": 17000,
+    "oldHarga": 19000,
+    "diskon": "Promo",
+    "stok": true,
+    "img": "produk_1795145607288.jpg",
+    "desk": "Halal, tanpa pengawet, dan tanpa pewarna buatan."
   }
 ]
