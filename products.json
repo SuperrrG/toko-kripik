@@ -79,7 +79,7 @@
     "harga": 17000,
     "oldHarga": 19000,
     "diskon": "Promo",
-    "stok": true,
+    "stok": false,
     "img": "produk_1795146473309.jpg",
     "desk": "Halal, tanpa pengawet, dan tanpa pewarna buatan."
   }
