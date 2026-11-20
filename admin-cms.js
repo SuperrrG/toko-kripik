@@ -95,15 +95,21 @@
     if (badge) badge.innerText = totalQty;
 
     if (typeof window.sinkronKeranjangUI === "function") {
-      try { window.sinkronKeranjangUI(); } catch (err) { console.error(err); }
+      try { window.sinkronKeranjangUI(); } catch (err) {}
     }
 
-    const toast = document.querySelector(".toast-notif");
-    if (toast) {
-      toast.innerText = "✅ Masuk ke keranjang!";
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 1800);
+    let toast = document.querySelector(".toast-notif");
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.className = "toast-notif";
+      toast.style.cssText = "position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#5a2d0c;color:#fef7dc;padding:10px 18px;border-radius:99px;font-size:13px;font-weight:800;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.25);transition:opacity 0.25s;";
+      document.body.appendChild(toast);
     }
+    toast.innerText = "✅ Masuk ke keranjang!";
+    toast.style.opacity = "1";
+    toast.style.display = "block";
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => { toast.style.opacity = "0"; setTimeout(() => toast.style.display = "none", 250); }, 1600);
   }
 
   let ketukan = 0, timerKetuk = null;
