@@ -117,12 +117,14 @@ document.addEventListener("DOMContentLoaded", () => {
   window.ubahQty = (index, delta) => { keranjang[index].qty += delta; if (keranjang[index].qty <= 0) keranjang.splice(index, 1); renderKeranjang(); };
 
   function renderKeranjang() {
+    keranjang = JSON.parse(localStorage.getItem("keranjangCreaz")) || [];
     cartItemsContainer.innerHTML = "";
     let totalHarga = 0, totalQty = 0;
 
     if (keranjang.length === 0) {
       cartItemsContainer.innerHTML = `<p style="text-align:center;color:#8c5228;padding:30px 10px;font-weight:700;">Keranjang masih kosong nih.<br>Yuk pilih keripik favoritmu!</p>`;
     } else {
+      cartItemsContainer.innerHTML = `<div style="text-align:right;margin-bottom:6px;"><button type="button" id="btn-kosong-cart" style="background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:800;cursor:pointer;">🗑️ Kosongkan Keranjang</button></div>`;
       keranjang.forEach((item, index) => {
         const sub = item.harga * item.qty;
         totalHarga += sub; totalQty += item.qty;
@@ -165,12 +167,14 @@ document.addEventListener("DOMContentLoaded", () => {
       if (keranjang[i].qty > 1) keranjang[i].qty -= 1; else keranjang.splice(i, 1);
       renderKeranjang();
     });
+    const btnKosong = document.getElementById("btn-kosong-cart"); if (btnKosong) btnKosong.onclick = () => { keranjang = []; localStorage.setItem("keranjangCreaz", "[]"); renderKeranjang(); };
     document.querySelectorAll(".qty-btn.plus").forEach(b => b.onclick = () => {
       keranjang[b.dataset.index].qty += 1; renderKeranjang();
     });
   }
 
   document.getElementById("checkout-wa").onclick = () => {
+    keranjang = JSON.parse(localStorage.getItem("keranjangCreaz")) || [];
     if (keranjang.length === 0) return alert("Pilih produk Crea'z dulu ya!");
     const nama = document.getElementById("nama-pemesan").value.trim();
     const alamat = document.getElementById("alamat-pemesan").value.trim();
