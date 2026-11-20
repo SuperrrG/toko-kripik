@@ -51,7 +51,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   if (searchInput) searchInput.oninput = (e) => filterPencarian(e.target.value);
 
-    window.tampilLoadingAksi = function(pesan, durasi, callback) {
+      window.alert = function(pesan) {
+    if (typeof window.creazAlert === "function") return window.creazAlert(pesan);
+  };
+
+  window.tampilLoadingAksi = function(pesan, durasi, callback) {
     let box = document.getElementById("aksi-loader-box");
     if (!box) {
       box = document.createElement("div");
