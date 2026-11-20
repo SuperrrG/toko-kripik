@@ -118,11 +118,11 @@
       const jalankanPrompt = () => {
         const pin = prompt("Masukkan PIN Admin Crea'z:");
         if (pin === PIN_ADMIN) {
-          if (window.tampilLoadingAksi) window.tampilLoadingAksi("⚙️ Memuat Panel Admin Crea'z...", 1200, bukaPanelAdmin);
+          if (window.tampilLoadingAksi) window.tampilLoadingAksi("⚙️ Memuat Panel Admin Crea'z...", 1400, bukaPanelAdmin);
           else bukaPanelAdmin();
         } else if (pin !== null) alert("PIN salah!");
       };
-      if (window.tampilLoadingAksi) window.tampilLoadingAksi("🔐 Membuka gerbang PIN Admin...", 1200, jalankanPrompt);
+      if (window.tampilLoadingAksi) window.tampilLoadingAksi("🔐 Membuka gerbang PIN Admin...", 1400, jalankanPrompt);
       else jalankanPrompt();
     }
 
@@ -164,7 +164,7 @@
         <div class="admin-field"><label>Nama Produk</label><input type="text" id="adm-nama" placeholder="Contoh: Keripik Talas — Rasa Keju"></div>
         <div style="display:flex; gap:8px;">
           <div class="admin-field" style="flex:1;"><label>Harga Jual</label><input type="number" id="adm-harga" placeholder="10000"></div>
-          <div class="admin-field" style="flex:1;"><label>Harga Coret</label><input type="number" id="adm-old" placeholder="12000"></div>
+          <div class="admin-field" style="flex:1;"><label>Harga Coret</label><input type="number" id="adm-old" placeholder="14000"></div>
         </div>
         <div class="admin-field">
           <label>Kategori Produk (Pencet cepat atau ketik manual)</label>
