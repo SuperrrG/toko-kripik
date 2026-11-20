@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
     overlay.classList.remove("active"); document.documentElement.classList.remove("no-scroll"); document.body.classList.remove("no-scroll");
   }
 
-  document.getElementById("btn-cart").onclick = () => { cartDrawer.classList.add("active"); bukaOverlay(); };
+  document.getElementById("btn-cart").onclick = () => { if (typeof window.sinkronKeranjangUI === "function") window.sinkronKeranjangUI(); cartDrawer.classList.add("active"); bukaOverlay(); };
   document.getElementById("close-cart").onclick = tutupSemua;
   document.getElementById("close-modal").onclick = tutupSemua;
   document.getElementById("close-brand-modal").onclick = tutupSemua;
@@ -117,7 +117,6 @@ document.addEventListener("DOMContentLoaded", () => {
   window.ubahQty = (index, delta) => { keranjang[index].qty += delta; if (keranjang[index].qty <= 0) keranjang.splice(index, 1); renderKeranjang(); };
 
   function renderKeranjang() {
-    keranjang = JSON.parse(localStorage.getItem("keranjangCreaz")) || [];
     cartItemsContainer.innerHTML = "";
     let totalHarga = 0, totalQty = 0;
 
