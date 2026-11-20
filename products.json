@@ -67,7 +67,7 @@
     "harga": 10000,
     "oldHarga": 12000,
     "diskon": "Hemat",
-    "stok": false,
+    "stok": true,
     "img": "produk2.png",
     "desk": "Keripik talas rasa balado yang gurih dan pedas. Halal, tanpa pengawet, dan tanpa pewarna buatan."
   },
@@ -79,7 +79,7 @@
     "harga": 17000,
     "oldHarga": 19000,
     "diskon": "Promo",
-    "stok": false,
+    "stok": true,
     "img": "produk_1795146473309.jpg",
     "desk": "Halal, tanpa pengawet, dan tanpa pewarna buatan."
   },
