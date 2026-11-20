@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let teks = `Halo Kak, saya mau pesan *Keripik Crea'z*:\n\n`, total = 0;
     keranjang.forEach((item, idx) => { const sub = item.harga * item.qty; total += sub; teks += `${idx + 1}. *${item.nama}* (${item.qty}x @ Rp ${item.harga.toLocaleString("id-ID")}) = Rp ${sub.toLocaleString("id-ID")}\n`; });
     teks += `\n*Total Belanja: Rp ${total.toLocaleString("id-ID")}*\n\n*Data Penerima:*\nNama: ${namaPembeli}\nAlamat: ${alamatPembeli}`;
-    window.open(`https://wa.me/6287882468521{nomorWA}?text=${encodeURIComponent(teks)}`, "_blank");
+    window.open(`https://wa.me/6287882468521?text=${encodeURIComponent(teks)}`, "_blank");
   };
 
   renderKeranjang();
