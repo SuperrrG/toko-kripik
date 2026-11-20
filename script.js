@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       box.style.display = "none";
       if (typeof callback === "function") callback();
-    }, durasi || 1400);
+    }, durasi || 1600);
   };
 
   document.addEventListener("click", (e) => {
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
       else if (url.includes("instagram.com")) msg = "📸 Membuka Instagram Crea'z...";
       else if (url.includes("shopee.co.id")) msg = "🛍️ Membuka toko Shopee...";
       else if (url.includes("://google.com")) msg = "📍 Membuka titik lokasi Maps...";
-      window.tampilLoadingAksi(msg, 1400, () => window.open(url, "_blank"));
+      window.tampilLoadingAksi(msg, 1600, () => window.open(url, "_blank"));
     }
   });
 
@@ -269,7 +269,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const waLink = "https" + String.fromCharCode(58,47,47) + "wa." + "me/6285185056083";
       document.getElementById("btn-lanjut-wa").onclick = function() {
         modalVerif.classList.remove("active");
-        window.tampilLoadingAksi("💬 Memproses pesanan ke WhatsApp...", 1400, () => {
+        window.tampilLoadingAksi("💬 Memproses pesanan ke WhatsApp...", 1600, () => {
           window.open(`${waLink}?text=${encodeURIComponent(teksWA)}`, "_blank");
         });
       };
@@ -327,13 +327,22 @@ document.addEventListener("DOMContentLoaded", () => {
           wadahHujan.appendChild(p);
         }
 
-        document.getElementById("tutup-brand").onclick = () => { bModal.classList.remove("active"); bModal.style.display = "none"; tutupSemua(); };
+        document.getElementById("tutup-brand").onclick = () => {
+          bModal.classList.remove("active"); bModal.style.display = "none"; tutupSemua();
+          if (window.tampilLoadingAksi) window.tampilLoadingAksi("👋 Menutup profil Keripik Crea'z...", 1600);
+        };
         document.getElementById("btn-lihat-produk-brand").onclick = () => {
           bModal.classList.remove("active"); bModal.style.display = "none"; tutupSemua();
-          const kat = document.getElementById("katalog"); if (kat) kat.scrollIntoView({ behavior: "smooth" });
+          if (window.tampilLoadingAksi) {
+            window.tampilLoadingAksi("🛍️ Menyiapkan katalog produk...", 1600, () => {
+              const kat = document.getElementById("katalog"); if (kat) kat.scrollIntoView({ behavior: "smooth" });
+            });
+          } else {
+            const kat = document.getElementById("katalog"); if (kat) kat.scrollIntoView({ behavior: "smooth" });
+          }
         };
       }
-      window.tampilLoadingAksi("✨ Membuka profil Keripik Crea'z...", 1400, () => { bModal.classList.add("active"); bModal.style.display = "flex"; bModal.style.opacity = "1"; bModal.style.pointerEvents = "auto"; bukaOverlay(); });
+      window.tampilLoadingAksi("✨ Membuka profil Keripik Crea'z...", 1600, () => { bModal.classList.add("active"); bModal.style.display = "flex"; bModal.style.opacity = "1"; bModal.style.pointerEvents = "auto"; bukaOverlay(); });
     });
   }
 });
