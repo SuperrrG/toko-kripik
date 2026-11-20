@@ -172,7 +172,7 @@
 
     async function panggilPinAdmin() {
       if (!localStorage.getItem("gh_token_creaz")) return;
-      const jalankanPrompt = () => {
+      const jalankanPrompt = async () => {
         const pin = await window.creazPrompt("Gerbang Admin Crea'z", "••••");
         if (pin === PIN_ADMIN) {
           if (window.tampilLoadingAksi) window.tampilLoadingAksi("⚙️ Memuat Panel Admin Crea'z...", 1600, bukaPanelAdmin);
