@@ -117,37 +117,82 @@ document.addEventListener("DOMContentLoaded", () => {
   window.ubahQty = (index, delta) => { keranjang[index].qty += delta; if (keranjang[index].qty <= 0) keranjang.splice(index, 1); renderKeranjang(); };
 
   function renderKeranjang() {
-    localStorage.setItem("keranjangCreaz", JSON.stringify(keranjang));
-    const wadah = document.getElementById("cart-items");
-    let totalItem = 0, totalHarga = 0; wadah.innerHTML = "";
-    if (keranjang.length === 0) { wadah.innerHTML = '<p class="empty-msg">Keranjang masih kosong nih.</p>'; }
-    else {
-      keranjang.forEach((item, i) => {
-        totalItem += item.qty; totalHarga += item.harga * item.qty;
-        wadah.innerHTML += `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #e6dec8;">
-          <img src="${item.img || 'produk1.png'}" style="width:48px;height:48px;object-fit:contain;background:#fff;border:1.5px solid #e6dec8;border-radius:10px;">
-          <div style="flex:1;text-align:left;"><strong style="font-size:12.5px;display:block;">${item.nama}</strong>
-          <small style="color:#78716c;display:block;font-size:11px;">Rp ${item.harga.toLocaleString("id-ID")} x ${item.qty}</small>
-          <small style="color:#8c5228;font-weight:800;">Subtotal: Rp ${(item.harga * item.qty).toLocaleString("id-ID")}</small></div>
-          <div style="display:flex;align-items:center;gap:6px;">
-            <button onclick="ubahQty(${i},-1)" style="width:24px;height:24px;border-radius:6px;border:1.5px solid #5a2d0c;background:white;font-weight:bold;">-</button>
-            <span style="font-size:13px;font-weight:bold;">${item.qty}</span>
-            <button onclick="ubahQty(${i},1)" style="width:24px;height:24px;border-radius:6px;border:1.5px solid #5a2d0c;background:#f4be2c;font-weight:bold;">+</button>
-          </div></div>`;
+    cartItemsContainer.innerHTML = "";
+    let totalHarga = 0, totalQty = 0;
+
+    if (keranjang.length === 0) {
+      cartItemsContainer.innerHTML = `<p style="text-align:center;color:#8c5228;padding:30px 10px;font-weight:700;">Keranjang masih kosong nih.<br>Yuk pilih keripik favoritmu!</p>`;
+    } else {
+      keranjang.forEach((item, index) => {
+        const sub = item.harga * item.qty;
+        totalHarga += sub; totalQty += item.qty;
+        cartItemsContainer.innerHTML += `
+          <div class="cart-item">
+            <img src="${item.img || "produk1.png"}" alt="${item.nama}" class="cart-item-img">
+            <div class="cart-item-info">
+              <h4>${item.nama}</h4>
+              <div class="cart-item-meta">${item.qty}x @ Rp ${item.harga.toLocaleString("id-ID")}</div>
+              <div class="cart-item-sub">Subtotal: Rp ${sub.toLocaleString("id-ID")}</div>
+            </div>
+            <div class="qty-control">
+              <button class="qty-btn minus" data-index="${index}">-</button>
+              <span style="font-weight:800;font-size:13px;min-width:16px;text-align:center;">${item.qty}</span>
+              <button class="qty-btn plus" data-index="${index}">+</button>
+            </div>
+          </div>`;
       });
     }
-    document.getElementById("cart-badge").innerText = totalItem;
-    document.getElementById("cart-total").innerText = "Rp " + totalHarga.toLocaleString("id-ID");
+
+    const diskon = totalQty >= 10 ? Math.round(totalHarga * 0.2) : 0;
+    const totalAkhir = totalHarga - diskon;
+    const info = totalQty > 0 && totalQty < 10
+      ? `<div style="font-size:11.5px;color:#8c5228;background:#fef7dc;border:1px dashed #5a2d0c;border-radius:8px;padding:6px 8px;margin-bottom:8px;text-align:center;font-weight:700;">💡 Tambah <b>${10 - totalQty} pcs lagi</b> untuk otomatis dapat <b>Diskon 20%</b>!</div>`
+      : (totalQty >= 10 ? `<div style="font-size:11.5px;color:#15803d;background:#dcfce7;border:1px solid #86efac;border-radius:8px;padding:6px 8px;margin-bottom:8px;text-align:center;font-weight:800;">🎉 Diskon Grosir 20% (-Rp ${diskon.toLocaleString("id-ID")}) aktif!</div>` : "");
+
+    const totalEl = document.getElementById("cart-total");
+    if (totalEl) {
+      totalEl.parentElement.innerHTML = info + (diskon > 0
+        ? `<div style="display:flex;justify-content:space-between;font-size:12px;color:#8c5228;"><span>Subtotal (${totalQty} pcs):</span><span style="text-decoration:line-through;">Rp ${totalHarga.toLocaleString("id-ID")}</span></div>
+           <div style="display:flex;justify-content:space-between;font-weight:900;font-size:15px;color:#5a2d0c;"><span>Total Akhir (-20%):</span><span id="cart-total">Rp ${totalAkhir.toLocaleString("id-ID")}</span></div>`
+        : `<div style="display:flex;justify-content:space-between;font-weight:900;font-size:15px;color:#5a2d0c;"><span>Total Belanja:</span><span id="cart-total">Rp ${totalHarga.toLocaleString("id-ID")}</span></div>`);
+    }
+
+    if (cartBadge) cartBadge.innerText = totalQty;
+    localStorage.setItem("keranjangCreaz", JSON.stringify(keranjang));
+
+    document.querySelectorAll(".qty-btn.minus").forEach(b => b.onclick = () => {
+      const i = b.dataset.index;
+      if (keranjang[i].qty > 1) keranjang[i].qty -= 1; else keranjang.splice(i, 1);
+      renderKeranjang();
+    });
+    document.querySelectorAll(".qty-btn.plus").forEach(b => b.onclick = () => {
+      keranjang[b.dataset.index].qty += 1; renderKeranjang();
+    });
   }
 
   document.getElementById("checkout-wa").onclick = () => {
     if (keranjang.length === 0) return alert("Pilih produk Crea'z dulu ya!");
-    const namaPembeli = document.getElementById("nama-pemesan").value.trim();
-    const alamatPembeli = document.getElementById("alamat-pemesan").value.trim();
-    if (!namaPembeli || !alamatPembeli) return alert("Mohon isi Nama dan Alamat pengiriman dulu ya!");
-    let teks = `Halo Kak, saya mau pesan *Keripik Crea'z*:\n\n`, total = 0;
-    keranjang.forEach((item, idx) => { const sub = item.harga * item.qty; total += sub; teks += `${idx + 1}. *${item.nama}* (${item.qty}x @ Rp ${item.harga.toLocaleString("id-ID")}) = Rp ${sub.toLocaleString("id-ID")}\n`; });
-    teks += `\n*Total Belanja: Rp ${total.toLocaleString("id-ID")}*\n\n*Data Penerima:*\nNama: ${namaPembeli}\nAlamat: ${alamatPembeli}`;
+    const nama = document.getElementById("nama-pemesan").value.trim();
+    const alamat = document.getElementById("alamat-pemesan").value.trim();
+    if (!nama || !alamat) return alert("Mohon isi Nama dan Alamat pengiriman dulu ya!");
+
+    let teks = `Halo Kak, saya mau pesan *Keripik Crea'z*:\n\n`, subAll = 0, qtyAll = 0;
+    keranjang.forEach((item, idx) => {
+      const sub = item.harga * item.qty;
+      subAll += sub; qtyAll += item.qty;
+      teks += `${idx + 1}. *${item.nama}* (${item.qty}x @ Rp ${item.harga.toLocaleString("id-ID")}) = Rp ${sub.toLocaleString("id-ID")}\n`;
+    });
+
+    if (qtyAll >= 10) {
+      const pot = Math.round(subAll * 0.2);
+      teks += `\nSubtotal (${qtyAll} pcs): Rp ${subAll.toLocaleString("id-ID")}`;
+      teks += `\n🎉 *Diskon Grosir 20% (≥10 pcs): -Rp ${pot.toLocaleString("id-ID")}*`;
+      teks += `\n*Total Bayar: Rp ${(subAll - pot).toLocaleString("id-ID")}*\n\n`;
+    } else {
+      teks += `\n*Total Belanja (${qtyAll} pcs): Rp ${subAll.toLocaleString("id-ID")}*\n\n`;
+    }
+
+    teks += `*Data Penerima:*\nNama: ${nama}\nAlamat: ${alamat}`;
     window.open(`https://wa.me/6287882468521?text=${encodeURIComponent(teks)}`, "_blank");
   };
 
