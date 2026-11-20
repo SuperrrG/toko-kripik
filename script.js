@@ -154,3 +154,5 @@ document.addEventListener("DOMContentLoaded", () => {
   renderKeranjang();
 });
 window.addEventListener("load", () => { window.scrollTo(0, 0); setTimeout(() => window.scrollTo(0, 0), 1600); });
+
+window.scrollTo(0, 0);
