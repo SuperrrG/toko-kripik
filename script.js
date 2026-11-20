@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const splash = document.getElementById("loader") || document.getElementById("splash-screen");
+  const splash = document.getElementById("loading-screen") || document.getElementById("splash-screen");
   if (splash) setTimeout(() => { splash.classList.add("hidden"); splash.style.opacity = "0"; setTimeout(() => splash.remove(), 450); }, 900);
 
   const overlay = document.getElementById("overlay");
