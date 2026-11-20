@@ -89,7 +89,15 @@
     if (ada) { ada.qty += 1; ada.img = p.img; ada.harga = Number(p.harga); }
     else k.push({ nama: p.nama, harga: Number(p.harga), img: p.img, qty: 1 });
     localStorage.setItem("keranjangCreaz", JSON.stringify(k));
-    if (typeof window.sinkronKeranjangUI === "function") window.sinkronKeranjangUI();
+
+    let totalQty = k.reduce((acc, item) => acc + item.qty, 0);
+    const badge = document.getElementById("cart-count");
+    if (badge) badge.innerText = totalQty;
+
+    if (typeof window.sinkronKeranjangUI === "function") {
+      try { window.sinkronKeranjangUI(); } catch (err) { console.error(err); }
+    }
+
     const toast = document.querySelector(".toast-notif");
     if (toast) {
       toast.innerText = "✅ Masuk ke keranjang!";
