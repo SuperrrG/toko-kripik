@@ -30,7 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
       document.querySelectorAll(".product-card").forEach(card => {
         card.style.display = card.dataset.nama.toLowerCase().includes(kata) ? "flex" : "none";
       });
-      document.getElementById("katalog").scrollIntoView({ behavior: "smooth" });
     });
   }
   document.getElementById("btn-cari-aksi").onclick = jalankanPencarian;
@@ -154,3 +153,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   renderKeranjang();
 });
+window.addEventListener("load", () => { window.scrollTo(0, 0); setTimeout(() => window.scrollTo(0, 0), 1600); });
