@@ -248,8 +248,61 @@
         <div id="adm-list"></div>
       </div>`;
     modal.classList.add("active"); document.getElementById("overlay").classList.add("active");
-    document.getElementById("tutup-admin").onclick = () => { modal.classList.remove("active"); document.getElementById("overlay").classList.remove("active"); };
+    document.getElementById("tutup-admin").onclick = () => {
+      modal.classList.remove("active");
+      document.getElementById("overlay").classList.remove("active");
+      if (window.tampilLoadingAksi) window.tampilLoadingAksi("👋 Menutup Panel Admin...", 1600);
+    };
     renderDaftarAdmin();
+
+    function setLoadingUploadAdmin(aktif, pesan) {
+      let box = document.getElementById("aksi-loader-box");
+      if (!box) {
+        box = document.createElement("div");
+        box.id = "aksi-loader-box";
+        box.style.cssText = "position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(45,22,6,0.58);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:2147483647;text-align:center;padding:24px;box-sizing:border-box;";
+        box.innerHTML = `<div style="background:rgba(254,247,220,0.96);border:2.5px solid #5a2d0c;border-radius:22px;padding:22px 24px;box-shadow:0 10px 28px rgba(0,0,0,0.35);max-width:290px;width:100%;">
+          <img src="logo.jpg" alt="Crea'Z" class="spinner-logo" style="width:76px;height:76px;border-radius:50%;object-fit:cover;border:3px solid #5a2d0c;margin:0 auto 10px;display:block;" onerror="this.style.display='none'">
+          <strong style="font-size:19px;font-weight:900;color:#5a2d0c;margin-bottom:4px;display:block;">Keripik Crea'z</strong>
+          <p id="aksi-loader-teks" style="font-size:13.5px;font-weight:800;color:#8c5228;margin:0;line-height:1.4;">Memproses...</p>
+          <small style="margin-top:10px;font-size:10.5px;font-weight:800;color:#8c5228;display:block;">Created by SuperG &bull; Designed by M.A.Y</small>
+        </div>`;
+        document.body.appendChild(box);
+      }
+      const pEl = document.getElementById("aksi-loader-teks");
+      if (pEl && pesan) pEl.innerText = pesan;
+      box.style.display = aktif ? "flex" : "none";
+    }
+
+    function notifSuksesCountdown() {
+      let sisa = 10;
+      let m = document.getElementById("creaz-custom-dialog");
+      if (!m) {
+        m = document.createElement("div");
+        m.id = "creaz-custom-dialog";
+        m.style.cssText = "position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(45,22,6,0.65);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:2147483647;padding:20px;box-sizing:border-box;";
+        document.body.appendChild(m);
+      }
+      m.style.display = "flex";
+      const gambarNotif = () => {
+        m.innerHTML = `<div style="background:#fef7dc;border:2.5px solid #5a2d0c;border-radius:22px;padding:22px 20px;max-width:320px;width:100%;text-align:center;box-shadow:0 10px 28px rgba(0,0,0,0.35);">
+          <img src="logo.jpg" alt="Crea'Z" style="width:54px;height:54px;border-radius:50%;object-fit:cover;border:2.5px solid #5a2d0c;margin:0 auto 6px;display:block;" onerror="this.style.display='none'">
+          <div style="font-size:13px;font-weight:900;color:#5a2d0c;margin-bottom:6px;">Keripik Crea'z</div>
+          <div style="font-size:30px;margin-bottom:4px;">✅</div>
+          <h3 style="font-size:16px;font-weight:900;color:#15803d;margin:0 0 6px;">Produk Berhasil Disimpan!</h3>
+          <p style="font-size:12.5px;font-weight:700;color:#8c5228;line-height:1.45;margin:0 0 14px;">Perubahan sudah terkirim ke server.<br>Tunggu sekitar <b>${sisa} detik</b> agar tampil di katalog utama...</p>
+          <button type="button" id="creaz-cd-ok" style="width:100%;background:#f4be2c;color:#5a2d0c;border:2px solid #5a2d0c;border-radius:12px;padding:10px;font-size:13.5px;font-weight:900;cursor:pointer;box-shadow:0 3px 0 #5a2d0c;">Oke, Mengerti</button>
+          <small style="margin-top:10px;font-size:10px;font-weight:800;color:#8c5228;display:block;">Created by SuperG &bull; Designed by M.A.Y</small>
+        </div>`;
+        document.getElementById("creaz-cd-ok").onclick = () => { clearInterval(tmr); m.style.display = "none"; };
+      };
+      gambarNotif();
+      const tmr = setInterval(() => {
+        sisa -= 1;
+        if (sisa <= 0) { clearInterval(tmr); m.style.display = "none"; }
+        else gambarNotif();
+      }, 1000);
+    }
 
     document.getElementById("adm-simpan").onclick = async () => {
       const token = document.getElementById("adm-token").value.trim();
@@ -272,18 +325,24 @@
       try {
         let namaFileGambar = idx >= 0 ? daftarProduk[idx].img : "produk1.png";
         if (fileInput.files.length > 0) {
+          setLoadingUploadAdmin(true, "📤 Mengunggah foto produk...");
           namaFileGambar = "produk_" + Date.now() + ".jpg";
           const base64Img = await kompresGambar(fileInput.files.item(0));
           await uploadKeGitHub(token, namaFileGambar, base64Img, "Upload foto " + namaFileGambar);
         }
+        setLoadingUploadAdmin(true, "💾 Menyimpan katalog ke website...");
         const itemBaru = { id: "p" + Date.now(), kategori, tag, nama, harga, oldHarga, diskon: oldHarga > harga ? "Promo" : "", stok: idx >= 0 ? daftarProduk[idx].stok : true, img: namaFileGambar, desk };
         if (idx >= 0) daftarProduk[idx] = itemBaru; else daftarProduk.push(itemBaru);
 
         const jsonStr = btoa(unescape(encodeURIComponent(JSON.stringify(daftarProduk, null, 2))));
         await uploadKeGitHub(token, "products.json", jsonStr, "Update katalog produk dari Admin");
-        window.creazAlert("✅ Tersimpan! Perubahan akan muncul di website dalam ~45 detik.");
+        setLoadingUploadAdmin(false);
+        notifSuksesCountdown();
         renderDaftarAdmin(); renderKatalog(daftarProduk);
-      } catch (err) { window.creazAlert("Gagal: " + err.message); }
+      } catch (err) {
+        setLoadingUploadAdmin(false);
+        window.creazAlert("Gagal: " + err.message);
+      }
       btnSimpan.innerText = "💾 Simpan ke Website"; btnSimpan.disabled = false;
     };
   }
