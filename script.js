@@ -280,7 +280,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.appendChild(bModal);
 
         const wadahHujan = document.getElementById("wadah-hujan");
-        const ikonHujan = ["🍃", "✨", "🥔", "🌿"];
+        const ikonHujan = ["🍠", "🌽", "🌶️", "🥔", "🍘"];
         for (let i = 0; i < 16; i++) {
           const p = document.createElement("span");
           p.className = "partikel-hujan";
