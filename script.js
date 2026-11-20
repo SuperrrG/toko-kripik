@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const splash = document.getElementById("loading-screen") || document.getElementById("splash-screen");
-  if (splash) setTimeout(() => { splash.classList.add("hidden"); splash.style.opacity = "0"; setTimeout(() => splash.remove(), 450); }, 900);
+  if (splash) setTimeout(() => { splash.classList.add("hidden"); splash.style.opacity = "0"; setTimeout(() => splash.remove(), 450); }, 3500);
 
   const overlay = document.getElementById("overlay");
   const cartDrawer = document.getElementById("cart-drawer");
@@ -43,24 +43,23 @@ document.addEventListener("DOMContentLoaded", () => {
     window.tampilLoadingAksi = function(pesan, durasi, callback) {
     let box = document.getElementById("aksi-loader-box");
     if (!box) {
-      const st = document.createElement("style");
-      st.innerHTML = `@keyframes putarSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`;
-      document.head.appendChild(st);
       box = document.createElement("div");
       box.id = "aksi-loader-box";
-      box.style.cssText = "position:fixed;inset:0;background:rgba(45,22,6,0.55);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:99999;";
-      box.innerHTML = `<div style="background:#fef7dc;border:2.5px solid #5a2d0c;border-radius:16px;padding:18px 22px;text-align:center;box-shadow:0 8px 0 rgba(90,45,12,0.25);max-width:270px;">
-        <div style="width:34px;height:34px;border:4px solid #e6dec8;border-top-color:#5a2d0c;border-radius:50%;margin:0 auto 10px;animation:putarSpin 0.7s linear infinite;"></div>
-        <div id="aksi-loader-teks" style="font-size:13px;font-weight:800;color:#5a2d0c;line-height:1.4;">Memproses...</div>
-      </div>`;
+      box.style.cssText = "position:fixed;top:0;left:0;width:100vw;height:100vh;background:#fef7dc;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:999999;text-align:center;padding:24px;box-sizing:border-box;";
+      box.innerHTML = `
+        <img src="logo.jpg" alt="Crea'Z" class="spinner-logo" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:3.5px solid #5a2d0c;margin-bottom:14px;box-shadow:0 6px 16px rgba(90,45,12,0.18);" onerror="this.style.display='none'">
+        <strong style="font-size:21px;font-weight:900;color:#5a2d0c;margin-bottom:6px;display:block;">Keripik Crea'z</strong>
+        <p id="aksi-loader-teks" style="font-size:14.5px;font-weight:800;color:#8c5228;margin:0;line-height:1.4;">Menyiapkan Keripik Crea'z...</p>
+        <small style="margin-top:12px;font-size:11.5px;font-weight:800;color:#8c5228;letter-spacing:0.6px;display:block;">Created by SuperG &bull; Designed by M.A.Y</small>
+      `;
       document.body.appendChild(box);
     }
-    document.getElementById("aksi-loader-teks").innerText = pesan || "Memproses...";
+    document.getElementById("aksi-loader-teks").innerText = pesan || "Menyiapkan Keripik Crea'z...";
     box.style.display = "flex";
     setTimeout(() => {
       box.style.display = "none";
       if (typeof callback === "function") callback();
-    }, durasi || 650);
+    }, durasi || 3500);
   };
 
   document.addEventListener("click", (e) => {
@@ -74,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
       else if (url.includes("instagram.com")) msg = "📸 Membuka Instagram Crea'z...";
       else if (url.includes("shopee.co.id")) msg = "🛍️ Membuka toko Shopee...";
       else if (url.includes("://google.com")) msg = "📍 Membuka titik lokasi Maps...";
-      window.tampilLoadingAksi(msg, 650, () => window.open(url, "_blank"));
+      window.tampilLoadingAksi(msg, 3500, () => window.open(url, "_blank"));
     }
   });
 
@@ -123,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
       toast.style.transform = "translateX(-50%) scale(1.08)";
       setTimeout(() => toast.style.transform = "translateX(-50%) scale(1)", 130);
       clearTimeout(window._toastTimer);
-      window._toastTimer = setTimeout(() => { toast.style.opacity = "0"; setTimeout(() => toast.style.display = "none", 200); }, 1800);
+      window._toastTimer = setTimeout(() => { toast.style.opacity = "0"; setTimeout(() => toast.style.display = "none", 200); }, 3500);
     },
 
     renderKeranjang() {
@@ -268,7 +267,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const waLink = "https" + String.fromCharCode(58,47,47) + "wa." + "me/6285185056083";
       document.getElementById("btn-lanjut-wa").onclick = function() {
         modalVerif.classList.remove("active");
-        window.tampilLoadingAksi("💬 Memproses pesanan ke WhatsApp...", 1500, () => {
+        window.tampilLoadingAksi("💬 Memproses pesanan ke WhatsApp...", 3500, () => {
           window.open(`${waLink}?text=${encodeURIComponent(teksWA)}`, "_blank");
         });
       };
@@ -332,7 +331,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const kat = document.getElementById("katalog"); if (kat) kat.scrollIntoView({ behavior: "smooth" });
         };
       }
-      window.tampilLoadingAksi("✨ Membuka profil Keripik Crea'z...", 550, () => { bModal.classList.add("active"); bModal.style.display = "flex"; bModal.style.opacity = "1"; bModal.style.pointerEvents = "auto"; bukaOverlay(); });
+      window.tampilLoadingAksi("✨ Membuka profil Keripik Crea'z...", 3500, () => { bModal.classList.add("active"); bModal.style.display = "flex"; bModal.style.opacity = "1"; bModal.style.pointerEvents = "auto"; bukaOverlay(); });
     });
   }
 });
