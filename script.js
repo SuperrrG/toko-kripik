@@ -45,12 +45,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!box) {
       box = document.createElement("div");
       box.id = "aksi-loader-box";
-      box.style.cssText = "position:fixed;top:0;left:0;width:100vw;height:100vh;background:#fef7dc;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:999999;text-align:center;padding:24px;box-sizing:border-box;";
+      box.style.cssText = "position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(45,22,6,0.52);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:999999;text-align:center;padding:24px;box-sizing:border-box;transition:opacity 0.25s ease;";
       box.innerHTML = `
-        <img src="logo.jpg" alt="Crea'Z" class="spinner-logo" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:3.5px solid #5a2d0c;margin-bottom:14px;box-shadow:0 6px 16px rgba(90,45,12,0.18);" onerror="this.style.display='none'">
-        <strong style="font-size:21px;font-weight:900;color:#5a2d0c;margin-bottom:6px;display:block;">Keripik Crea'z</strong>
-        <p id="aksi-loader-teks" style="font-size:14.5px;font-weight:800;color:#8c5228;margin:0;line-height:1.4;">Menyiapkan Keripik Crea'z...</p>
-        <small style="margin-top:12px;font-size:11.5px;font-weight:800;color:#8c5228;letter-spacing:0.6px;display:block;">Created by SuperG &bull; Designed by M.A.Y</small>
+        <div style="background:rgba(254,247,220,0.95);border:2.5px solid #5a2d0c;border-radius:22px;padding:22px 24px;box-shadow:0 10px 28px rgba(0,0,0,0.3);max-width:290px;width:100%;">
+          <img src="logo.jpg" alt="Crea'Z" class="spinner-logo" style="width:76px;height:76px;border-radius:50%;object-fit:cover;border:3px solid #5a2d0c;margin:0 auto 10px;display:block;box-shadow:0 4px 12px rgba(90,45,12,0.2);" onerror="this.style.display='none'">
+          <strong style="font-size:19px;font-weight:900;color:#5a2d0c;margin-bottom:4px;display:block;">Keripik Crea'z</strong>
+          <p id="aksi-loader-teks" style="font-size:13.5px;font-weight:800;color:#8c5228;margin:0;line-height:1.4;">Menyiapkan Keripik Crea'z...</p>
+          <small style="margin-top:10px;font-size:10.5px;font-weight:800;color:#8c5228;letter-spacing:0.5px;display:block;">Created by SuperG &bull; Designed by M.A.Y</small>
+        </div>
       `;
       document.body.appendChild(box);
     }
