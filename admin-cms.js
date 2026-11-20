@@ -9,7 +9,7 @@
   if (tokBaru) {
     localStorage.setItem("gh_token_creaz", tokBaru.trim());
     window.history.replaceState({}, document.title, window.location.pathname);
-    alert("✅ Akses Admin berhasil diaktifkan! Ketuk 5x tulisan credits di bawah untuk mulai mengedit.");
+    (window.creazAlert || alert)("✅ Akses Admin berhasil diaktifkan! Ketuk 5x tulisan credits di bawah untuk mulai mengedit.");
   }
 
   async function muatKatalog() {
@@ -120,7 +120,7 @@
         if (pin === PIN_ADMIN) {
           if (window.tampilLoadingAksi) window.tampilLoadingAksi("⚙️ Memuat Panel Admin Crea'z...", 1600, bukaPanelAdmin);
           else bukaPanelAdmin();
-        } else if (pin !== null) alert("PIN salah!");
+        } else if (pin !== null) (window.creazAlert || alert)("PIN salah!");
       };
       if (window.tampilLoadingAksi) window.tampilLoadingAksi("🔐 Membuka gerbang PIN Admin...", 1600, jalankanPrompt);
       else jalankanPrompt();
@@ -196,7 +196,7 @@
 
     document.getElementById("adm-simpan").onclick = async () => {
       const token = document.getElementById("adm-token").value.trim();
-      if (!token) return alert("Token belum aktif! Buka link aktivasi dulu.");
+      if (!token) return (window.creazAlert || alert)("Token belum aktif! Buka link aktivasi dulu.");
       localStorage.setItem("gh_token_creaz", token);
 
       const idx = parseInt(document.getElementById("adm-edit-idx").value);
@@ -207,7 +207,7 @@
       const tag = document.getElementById("adm-tag").value.trim() || "Favorit";
       const desk = document.getElementById("adm-desk").value.trim();
       const fileInput = document.getElementById("adm-file");
-      if (!nama) return alert("Nama produk wajib diisi!");
+      if (!nama) return (window.creazAlert || alert)("Nama produk wajib diisi!");
 
       const btnSimpan = document.getElementById("adm-simpan");
       btnSimpan.innerText = "⏳ Menyimpan..."; btnSimpan.disabled = true;
@@ -224,9 +224,9 @@
 
         const jsonStr = btoa(unescape(encodeURIComponent(JSON.stringify(daftarProduk, null, 2))));
         await uploadKeGitHub(token, "products.json", jsonStr, "Update katalog produk dari Admin");
-        alert("✅ Tersimpan! Perubahan akan muncul di website dalam ~45 detik.");
+        (window.creazAlert || alert)("✅ Tersimpan! Perubahan akan muncul di website dalam ~45 detik.");
         renderDaftarAdmin(); renderKatalog(daftarProduk);
-      } catch (err) { alert("Gagal: " + err.message); }
+      } catch (err) { (window.creazAlert || alert)("Gagal: " + err.message); }
       btnSimpan.innerText = "💾 Simpan ke Website"; btnSimpan.disabled = false;
     };
   }
@@ -250,7 +250,7 @@
 
   window.toggleStokAdmin = async (i) => {
     const token = document.getElementById("adm-token").value.trim();
-    if (!token) return alert("Token belum aktif!");
+    if (!token) return (window.creazAlert || alert)("Token belum aktif!");
     daftarProduk[i].stok = !daftarProduk[i].stok;
     renderDaftarAdmin(); renderKatalog(daftarProduk);
     const jsonStr = btoa(unescape(encodeURIComponent(JSON.stringify(daftarProduk, null, 2))));
@@ -269,7 +269,7 @@
   window.hapusProdukAdmin = async (i) => {
     if (!confirm("Hapus produk " + daftarProduk[i].nama + "?")) return;
     const token = document.getElementById("adm-token").value.trim();
-    if (!token) return alert("Token belum aktif!");
+    if (!token) return (window.creazAlert || alert)("Token belum aktif!");
     daftarProduk.splice(i, 1);
     renderDaftarAdmin(); renderKatalog(daftarProduk);
     const jsonStr = btoa(unescape(encodeURIComponent(JSON.stringify(daftarProduk, null, 2))));

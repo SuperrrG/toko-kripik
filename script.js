@@ -25,7 +25,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const btnSearch = document.getElementById("btn-search");
   if (btnSearch && searchBar) {
-    btnSearch.onclick = () => { searchBar.classList.toggle("active"); if (searchBar.classList.contains("active") && searchInput) searchInput.focus(); };
+    btnSearch.onclick = () => {
+      const akanBuka = !searchBar.classList.contains("active");
+      if (akanBuka && window.tampilLoadingAksi) {
+        window.tampilLoadingAksi("🔍 Menyiapkan pencarian produk...", 1600, () => {
+          searchBar.classList.add("active");
+          if (searchInput) searchInput.focus();
+        });
+      } else {
+        searchBar.classList.toggle("active");
+        if (searchBar.classList.contains("active") && searchInput) searchInput.focus();
+      }
+    };
   }
   const closeSearch = document.getElementById("close-search");
   if (closeSearch && searchBar) {
@@ -71,10 +82,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (url.startsWith("http")) {
       e.preventDefault();
       let msg = "Membuka tautan...";
-      if (url.includes("wa.me")) msg = "💬 Menghubungkan ke WhatsApp...";
-      else if (url.includes("instagram.com")) msg = "📸 Membuka Instagram Crea'z...";
-      else if (url.includes("shopee.co.id")) msg = "🛍️ Membuka toko Shopee...";
-      else if (url.includes("://google.com")) msg = "📍 Membuka titik lokasi Maps...";
+      const uLow = url.toLowerCase();
+      if (uLow.includes("maps") || uLow.includes("goo.gl") || uLow.includes("-7.583705")) msg = "📍 Membuka lokasi Google Maps...";
+      else if (uLow.includes("wa.me") || uLow.includes("whatsapp")) msg = "💬 Menghubungkan ke WhatsApp...";
+      else if (uLow.includes("instagram.com")) msg = "📸 Membuka Instagram Crea'z...";
+      else if (uLow.includes("shopee.co.id")) msg = "🛍️ Membuka toko Shopee...";
       window.tampilLoadingAksi(msg, 1600, () => window.open(url, "_blank"));
     }
   });
