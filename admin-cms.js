@@ -1,3 +1,60 @@
+(function(){
+  if (window._creazDialogReady) return;
+  window._creazDialogReady = true;
+  function buatModal() {
+    let m = document.getElementById("creaz-custom-dialog");
+    if (!m) {
+      m = document.createElement("div");
+      m.id = "creaz-custom-dialog";
+      m.style.cssText = "position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(45,22,6,0.65);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:2147483647;padding:20px;box-sizing:border-box;";
+      document.body.appendChild(m);
+    }
+    return m;
+  }
+  window.creazAlert = function(pesan, judul, ikon) {
+    return new Promise((resolve) => {
+      const m = buatModal();
+      const teks = String(pesan || "").replace(/^[✅❌⚠️🔐🧾]+\s*/, "");
+      const ico = ikon || (String(pesan).includes("❌") || String(pesan).includes("salah") || String(pesan).includes("Gagal") ? "⚠️" : (String(pesan).includes("✅") ? "✅" : "🥔"));
+      const ttl = judul || (ico === "⚠️" ? "Perhatian" : (ico === "✅" ? "Berhasil" : "Info Keripik Crea'z"));
+      m.innerHTML = `<div style="background:#fef7dc;border:2.5px solid #5a2d0c;border-radius:22px;padding:22px 20px;max-width:320px;width:100%;text-align:center;box-shadow:0 10px 28px rgba(0,0,0,0.35);">
+        <img src="logo.jpg" alt="Crea'Z" style="width:54px;height:54px;border-radius:50%;object-fit:cover;border:2.5px solid #5a2d0c;margin:0 auto 6px;display:block;" onerror="this.style.display='none'">
+        <div style="font-size:13px;font-weight:900;color:#5a2d0c;margin-bottom:8px;">Keripik Crea'z</div>
+        <div style="font-size:28px;margin-bottom:4px;">${ico}</div>
+        <h3 style="font-size:16px;font-weight:900;color:#5a2d0c;margin:0 0 6px;">${ttl}</h3>
+        <p style="font-size:13px;font-weight:700;color:#8c5228;line-height:1.45;margin:0 0 14px;">${teks}</p>
+        <button type="button" id="creaz-dlg-ok" style="width:100%;background:#f4be2c;color:#5a2d0c;border:2px solid #5a2d0c;border-radius:12px;padding:10px;font-size:13.5px;font-weight:900;cursor:pointer;box-shadow:0 3px 0 #5a2d0c;">Oke, Mengerti</button>
+        <small style="margin-top:10px;font-size:10px;font-weight:800;color:#8c5228;display:block;">Created by SuperG &bull; Designed by M.A.Y</small>
+      </div>`;
+      m.style.display = "flex";
+      document.getElementById("creaz-dlg-ok").onclick = () => { m.style.display = "none"; resolve(true); };
+    });
+  };
+  window.creazPrompt = function(judul, placeholder) {
+    return new Promise((resolve) => {
+      const m = buatModal();
+      m.innerHTML = `<div style="background:#fef7dc;border:2.5px solid #5a2d0c;border-radius:22px;padding:22px 20px;max-width:320px;width:100%;text-align:center;box-shadow:0 10px 28px rgba(0,0,0,0.35);">
+        <img src="logo.jpg" alt="Crea'Z" style="width:58px;height:58px;border-radius:50%;object-fit:cover;border:2.5px solid #5a2d0c;margin:0 auto 6px;display:block;" onerror="this.style.display='none'">
+        <div style="font-size:13.5px;font-weight:900;color:#5a2d0c;margin-bottom:8px;">Keripik Crea'z</div>
+        <h3 style="font-size:16px;font-weight:900;color:#5a2d0c;margin:0 0 4px;">🔐 ${judul || "Gerbang Admin"}</h3>
+        <p style="font-size:12px;font-weight:700;color:#8c5228;margin:0 0 12px;">Masukkan kode PIN rahasia:</p>
+        <input type="password" inputmode="numeric" id="creaz-prm-inp" placeholder="${placeholder || "••••"}" style="width:100%;box-sizing:border-box;text-align:center;font-size:20px;letter-spacing:6px;font-weight:900;padding:10px;border:2px solid #5a2d0c;border-radius:12px;background:#fff;color:#5a2d0c;margin-bottom:14px;outline:none;">
+        <div style="display:flex;gap:8px;">
+          <button type="button" id="creaz-prm-batal" style="flex:1;background:#fff;color:#5a2d0c;border:2px solid #5a2d0c;border-radius:12px;padding:10px;font-size:13px;font-weight:800;cursor:pointer;">Batal</button>
+          <button type="button" id="creaz-prm-ok" style="flex:1;background:#f4be2c;color:#5a2d0c;border:2px solid #5a2d0c;border-radius:12px;padding:10px;font-size:13px;font-weight:900;cursor:pointer;box-shadow:0 3px 0 #5a2d0c;">Masuk</button>
+        </div>
+        <small style="margin-top:10px;font-size:10px;font-weight:800;color:#8c5228;display:block;">Created by SuperG &bull; Designed by M.A.Y</small>
+      </div>`;
+      m.style.display = "flex";
+      const inp = document.getElementById("creaz-prm-inp");
+      setTimeout(() => inp.focus(), 80);
+      inp.onkeydown = (e) => { if (e.key === "Enter") document.getElementById("creaz-prm-ok").click(); };
+      document.getElementById("creaz-prm-batal").onclick = () => { m.style.display = "none"; resolve(null); };
+      document.getElementById("creaz-prm-ok").onclick = () => { const v = inp.value; m.style.display = "none"; resolve(v); };
+    });
+  };
+  window.alert = function(p) { return window.creazAlert(p); };
+})();
 (function() {
   const OWNER = "SuperrrG", REPO = "toko-kripik", PIN_ADMIN = "1234";
   const sl = String.fromCharCode(58,47,47);
@@ -9,7 +66,7 @@
   if (tokBaru) {
     localStorage.setItem("gh_token_creaz", tokBaru.trim());
     window.history.replaceState({}, document.title, window.location.pathname);
-    (window.creazAlert || alert)("✅ Akses Admin berhasil diaktifkan! Ketuk 5x tulisan credits di bawah untuk mulai mengedit.");
+    window.creazAlert("✅ Akses Admin berhasil diaktifkan! Ketuk 5x tulisan credits di bawah untuk mulai mengedit.");
   }
 
   async function muatKatalog() {
@@ -116,11 +173,11 @@
     async function panggilPinAdmin() {
       if (!localStorage.getItem("gh_token_creaz")) return;
       const jalankanPrompt = () => {
-        const pin = window.creazPrompt ? await window.creazPrompt("Gerbang Admin Crea'z", "••••") : prompt("Masukkan PIN Admin Crea'z:");
+        const pin = await window.creazPrompt("Gerbang Admin Crea'z", "••••");
         if (pin === PIN_ADMIN) {
           if (window.tampilLoadingAksi) window.tampilLoadingAksi("⚙️ Memuat Panel Admin Crea'z...", 1600, bukaPanelAdmin);
           else bukaPanelAdmin();
-        } else if (pin !== null) (window.creazAlert || alert)("PIN salah!");
+        } else if (pin !== null) window.creazAlert("PIN salah!");
       };
       if (window.tampilLoadingAksi) window.tampilLoadingAksi("🔐 Membuka gerbang PIN Admin...", 1600, jalankanPrompt);
       else jalankanPrompt();
@@ -196,7 +253,7 @@
 
     document.getElementById("adm-simpan").onclick = async () => {
       const token = document.getElementById("adm-token").value.trim();
-      if (!token) return (window.creazAlert || alert)("Token belum aktif! Buka link aktivasi dulu.");
+      if (!token) return window.creazAlert("Token belum aktif! Buka link aktivasi dulu.");
       localStorage.setItem("gh_token_creaz", token);
 
       const idx = parseInt(document.getElementById("adm-edit-idx").value);
@@ -207,7 +264,7 @@
       const tag = document.getElementById("adm-tag").value.trim() || "Favorit";
       const desk = document.getElementById("adm-desk").value.trim();
       const fileInput = document.getElementById("adm-file");
-      if (!nama) return (window.creazAlert || alert)("Nama produk wajib diisi!");
+      if (!nama) return window.creazAlert("Nama produk wajib diisi!");
 
       const btnSimpan = document.getElementById("adm-simpan");
       btnSimpan.innerText = "⏳ Menyimpan..."; btnSimpan.disabled = true;
@@ -224,9 +281,9 @@
 
         const jsonStr = btoa(unescape(encodeURIComponent(JSON.stringify(daftarProduk, null, 2))));
         await uploadKeGitHub(token, "products.json", jsonStr, "Update katalog produk dari Admin");
-        (window.creazAlert || alert)("✅ Tersimpan! Perubahan akan muncul di website dalam ~45 detik.");
+        window.creazAlert("✅ Tersimpan! Perubahan akan muncul di website dalam ~45 detik.");
         renderDaftarAdmin(); renderKatalog(daftarProduk);
-      } catch (err) { (window.creazAlert || alert)("Gagal: " + err.message); }
+      } catch (err) { window.creazAlert("Gagal: " + err.message); }
       btnSimpan.innerText = "💾 Simpan ke Website"; btnSimpan.disabled = false;
     };
   }
@@ -250,7 +307,7 @@
 
   window.toggleStokAdmin = async (i) => {
     const token = document.getElementById("adm-token").value.trim();
-    if (!token) return (window.creazAlert || alert)("Token belum aktif!");
+    if (!token) return window.creazAlert("Token belum aktif!");
     daftarProduk[i].stok = !daftarProduk[i].stok;
     renderDaftarAdmin(); renderKatalog(daftarProduk);
     const jsonStr = btoa(unescape(encodeURIComponent(JSON.stringify(daftarProduk, null, 2))));
@@ -269,7 +326,7 @@
   window.hapusProdukAdmin = async (i) => {
     if (!confirm("Hapus produk " + daftarProduk[i].nama + "?")) return;
     const token = document.getElementById("adm-token").value.trim();
-    if (!token) return (window.creazAlert || alert)("Token belum aktif!");
+    if (!token) return window.creazAlert("Token belum aktif!");
     daftarProduk.splice(i, 1);
     renderDaftarAdmin(); renderKatalog(daftarProduk);
     const jsonStr = btoa(unescape(encodeURIComponent(JSON.stringify(daftarProduk, null, 2))));
