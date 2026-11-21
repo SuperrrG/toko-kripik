@@ -476,10 +476,40 @@ document.addEventListener("DOMContentLoaded", () => {
           wadahHujan.appendChild(p);
         }
 
-        document.getElementById("btn-qr-katalog").onclick = () => {
+        document.getElementById("btn-qr-katalog").onclick = function() {
           const urlKat = "https://superrrg.github.io/toko-kripik/#katalog";
-          const qrApi = "https://api.qrserver.com/v1/create-qr-code/?size=320x320&color=5a2d0c&bgcolor=fef7dc&data=" + encodeURIComponent(urlKat);
-          window.creazAlert(`<img src="${qrApi}" alt="QR Katalog" style="width:190px;height:190px;border-radius:14px;border:2px solid #5a2d0c;margin:6px auto 8px;display:block;"><span style="font-size:11.5px;display:block;">Scan kamera HP untuk langsung membuka katalog <b>Keripik Crea'z</b>!</span>`, "QR Code Katalog", "📲");
+          const qrApi = "https://api.qrserver.com/v1/create-qr-code/?size=500x500&margin=12&color=5a2d0c&bgcolor=fef7dc&data=" + encodeURIComponent(urlKat);
+          window.creazAlert(
+            `<img src="${qrApi}" alt="QR Katalog" style="width:190px;height:190px;border-radius:14px;border:2px solid #5a2d0c;margin:6px auto 8px;display:block;">` +
+            `<span style="font-size:11.5px;display:block;margin-bottom:10px;">Scan kamera HP untuk langsung membuka katalog <b>Keripik Crea'z</b>!</span>` +
+            `<button type="button" id="btn-dl-qr" style="width:100%;background:#16a34a;color:#fff;border:2px solid #5a2d0c;border-radius:12px;padding:10px;font-size:13px;font-weight:900;cursor:pointer;box-shadow:0 3px 0 #5a2d0c;">⬇️ Unduh Gambar QR</button>`,
+            "QR Code Katalog",
+            "📲"
+          );
+          setTimeout(function() {
+            const btnDl = document.getElementById("btn-dl-qr");
+            if (btnDl) {
+              btnDl.onclick = async function() {
+                btnDl.disabled = true;
+                btnDl.innerText = "⏳ Mengunduh...";
+                try {
+                  const res = await fetch(qrApi);
+                  const blob = await res.blob();
+                  const link = document.createElement("a");
+                  link.href = URL.createObjectURL(blob);
+                  link.download = "QR-Keripik-Creaz.png";
+                  document.body.appendChild(link);
+                  link.click();
+                  link.remove();
+                  btnDl.innerText = "✅ Berhasil Diunduh!";
+                } catch (err) {
+                  window.open(qrApi, "_blank");
+                  btnDl.innerText = "⬇️ Unduh Gambar QR";
+                }
+                btnDl.disabled = false;
+              };
+            }
+          }, 80);
         };
         document.getElementById("tutup-brand").onclick = () => {
           bModal.classList.remove("active"); bModal.style.display = "none"; tutupSemua();
