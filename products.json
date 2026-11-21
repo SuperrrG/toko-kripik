@@ -7,7 +7,7 @@
     "harga": 10000,
     "oldHarga": 12000,
     "diskon": "Hemat",
-    "stok": false,
+    "stok": true,
     "img": "produk3.jpg",
     "desk": "Keripik talas dengan rasa jagung manis yang gurih dan renyah. Halal, tanpa pengawet, dan tanpa pewarna buatan."
   },
@@ -19,7 +19,7 @@
     "harga": 8000,
     "oldHarga": 10000,
     "diskon": "-20%",
-    "stok": false,
+    "stok": true,
     "img": "produk4.jpg",
     "desk": "Keripik singkong dengan rasa original yang gurih dan renyah. Halal, tanpa pengawet, dan tanpa pewarna buatan."
   },
@@ -55,7 +55,7 @@
     "harga": 8000,
     "oldHarga": 10000,
     "diskon": "-20%",
-    "stok": false,
+    "stok": true,
     "img": "produk1.png",
     "desk": "Keripik talas dengan rasa alami yang gurih dan renyah. Halal, tanpa pengawet, dan tanpa pewarna buatan."
   },
