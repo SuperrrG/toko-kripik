@@ -93,60 +93,32 @@ document.addEventListener("DOMContentLoaded", () => {
     closeSearch.onclick = () => {
       searchBar.classList.remove("active");
       if (searchInput) {
-        searchInput.value = "";
-        document.querySelectorAll(".product-card").forEach(c => c.style.display = "flex");
-      }
-    };
-  }
-
-  let timerKetikCari = null;
-  function prosesPencarianFinal(kataMentah) {
-    const kata = (kataMentah || "").toLowerCase().trim();
-    const semuaKartu = document.querySelectorAll(".product-card");
-    if (!kata) {
-      semuaKartu.forEach(c => c.style.display = "flex");
-      return;
-    }
-    const eksekusiFilter = () => {
-      let jumlahCocok = 0;
-      semuaKartu.forEach(c => {
-        const teksKartu = (c.dataset.nama || c.innerText || "").toLowerCase();
-        if (teksKartu.includes(kata)) {
-          c.style.display = "flex";
-          jumlahCocok++;
-        } else {
-          c.style.display = "none";
-        }
-      });
-      if (jumlahCocok === 0) {
-        semuaKartu.forEach(c => c.style.display = "flex");
-        window.creazAlert(`Produk "${kataMentah.trim()}" belum tersedia. Coba cari varian rasa lain ya!`, "Produk Tidak Ditemukan", "🔍");
-      }
-    };
-
-    if (typeof window.tampilLoadingAksi === "function") {
-      window.tampilLoadingAksi(`🔍 Mencari "${kataMentah.trim()}"...`, 1400, eksekusiFilter);
-    } else {
-      eksekusiFilter();
-    }
-  }
-
-  if (searchInput) {
     searchInput.oninput = (e) => {
-      clearTimeout(timerKetikCari);
-      const val = e.target.value;
-      if (!val.trim()) {
+      if (!e.target.value.trim()) {
         document.querySelectorAll(".product-card").forEach(c => c.style.display = "flex");
-        return;
       }
-      timerKetikCari = setTimeout(() => prosesPencarianFinal(val), 800);
     };
     searchInput.onkeydown = (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
-        clearTimeout(timerKetikCari);
+        if (!searchInput.value.trim()) {
+          window.creazAlert("Ketik nama keripik yang ingin kamu cari dulu ya!", "Kolom Pencarian Kosong", "🔍");
+          return;
+        }
         prosesPencarianFinal(searchInput.value);
       }
+    };
+  }
+
+  const btnCariAksi = document.getElementById("btn-cari-aksi");
+  if (btnCariAksi && searchInput) {
+    btnCariAksi.onclick = (e) => {
+      e.preventDefault();
+      if (!searchInput.value.trim()) {
+        window.creazAlert("Ketik nama keripik yang ingin kamu cari dulu ya!", "Kolom Pencarian Kosong", "🔍");
+        return;
+      }
+      prosesPencarianFinal(searchInput.value);
     };
   }
 
