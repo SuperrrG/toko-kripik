@@ -70,5 +70,17 @@
     "stok": false,
     "img": "produk2.png",
     "desk": "Keripik talas rasa balado yang gurih dan pedas. Halal, tanpa pengawet, dan tanpa pewarna buatan."
+  },
+  {
+    "id": "p1795223653742",
+    "kategori": "Keripik Singkong",
+    "tag": "Baru",
+    "nama": "Black Matcha",
+    "harga": 17000,
+    "oldHarga": 19000,
+    "diskon": "Promo",
+    "stok": true,
+    "img": "produk_1795223650763.jpg",
+    "desk": "Halal, tanpa pengawet, dan tanpa pewarna buatan."
   }
 ]
