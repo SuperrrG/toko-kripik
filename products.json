@@ -96,30 +96,6 @@
     "desk": "Halal, tanpa pengawet, dan tanpa pewarna buatan."
   },
   {
-    "id": "p1795189044350",
-    "kategori": "Sale pisang",
-    "tag": "Promo",
-    "nama": "Sale pisang",
-    "harga": 8000,
-    "oldHarga": 16000,
-    "diskon": "Promo",
-    "stok": true,
-    "img": "produk_1795189028889.jpg",
-    "desk": "Halal, tanpa pengawet, dan tanpa pewarna buatan."
-  },
-  {
-    "id": "p1795218335260",
-    "kategori": "Keripik Talas",
-    "tag": "Baru",
-    "nama": "Black Matcha",
-    "harga": 17000,
-    "oldHarga": 19000,
-    "diskon": "Promo",
-    "stok": true,
-    "img": "produk_1795218332196.jpg",
-    "desk": "Halal, tanpa pengawet, dan tanpa pewarna buatan."
-  },
-  {
     "id": "p1795220898882",
     "kategori": "Keripik Singkong",
     "tag": "Baru",
