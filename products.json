@@ -19,7 +19,7 @@
     "harga": 8000,
     "oldHarga": 10000,
     "diskon": "-20%",
-    "stok": true,
+    "stok": false,
     "img": "produk4.jpg",
     "desk": "Keripik singkong dengan rasa original yang gurih dan renyah. Halal, tanpa pengawet, dan tanpa pewarna buatan."
   },
