@@ -478,7 +478,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.getElementById("btn-qr-katalog").onclick = () => {
           const urlKat = "https://superrrg.github.io/toko-kripik/#katalog";
-          const qrApi = "https://qrserver.com" + encodeURIComponent(urlKat);
+          const qrApi = "https://api.qrserver.com/v1/create-qr-code/?size=320x320&color=5a2d0c&bgcolor=fef7dc&data=" + encodeURIComponent(urlKat);
           window.creazAlert(`<img src="${qrApi}" alt="QR Katalog" style="width:190px;height:190px;border-radius:14px;border:2px solid #5a2d0c;margin:6px auto 8px;display:block;"><span style="font-size:11.5px;display:block;">Scan kamera HP untuk langsung membuka katalog <b>Keripik Crea'z</b>!</span>`, "QR Code Katalog", "📲");
         };
         document.getElementById("tutup-brand").onclick = () => {
