@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const btnSearch = document.getElementById("btn-search");
   if (btnSearch && searchBar) {
-    btnSearch.onclick = (e) => {
+    btnSearch.onclick = function(e) {
       e.preventDefault();
       searchBar.classList.toggle("active");
       if (searchBar.classList.contains("active") && searchInput) searchInput.focus();
@@ -90,15 +90,52 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   const closeSearch = document.getElementById("close-search");
   if (closeSearch && searchBar) {
-    closeSearch.onclick = () => {
+    closeSearch.onclick = function() {
       searchBar.classList.remove("active");
       if (searchInput) {
-    searchInput.oninput = (e) => {
-      if (!e.target.value.trim()) {
-        document.querySelectorAll(".product-card").forEach(c => c.style.display = "flex");
+        searchInput.value = "";
+        document.querySelectorAll(".product-card").forEach(function(c) { c.style.display = "flex"; });
       }
     };
-    searchInput.onkeydown = (e) => {
+  }
+
+  function prosesPencarianFinal(kataMentah) {
+    const kata = (kataMentah || "").toLowerCase().trim();
+    const semuaKartu = document.querySelectorAll(".product-card");
+    if (!kata) {
+      semuaKartu.forEach(function(c) { c.style.display = "flex"; });
+      return;
+    }
+    const eksekusiFilter = function() {
+      let jumlahCocok = 0;
+      semuaKartu.forEach(function(c) {
+        const teksKartu = (c.dataset.nama || c.innerText || "").toLowerCase();
+        if (teksKartu.includes(kata)) {
+          c.style.display = "flex";
+          jumlahCocok++;
+        } else {
+          c.style.display = "none";
+        }
+      });
+      if (jumlahCocok === 0) {
+        semuaKartu.forEach(function(c) { c.style.display = "flex"; });
+        window.creazAlert("Produk \"" + kataMentah.trim() + "\" belum tersedia. Coba cari varian rasa lain ya!", "Produk Tidak Ditemukan", "🔍");
+      }
+    };
+    if (typeof window.tampilLoadingAksi === "function") {
+      window.tampilLoadingAksi("🔍 Mencari \"" + kataMentah.trim() + "\"...", 1600, eksekusiFilter);
+    } else {
+      eksekusiFilter();
+    }
+  }
+
+  if (searchInput) {
+    searchInput.oninput = function(e) {
+      if (!e.target.value.trim()) {
+        document.querySelectorAll(".product-card").forEach(function(c) { c.style.display = "flex"; });
+      }
+    };
+    searchInput.onkeydown = function(e) {
       if (e.key === "Enter") {
         e.preventDefault();
         if (!searchInput.value.trim()) {
@@ -112,7 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const btnCariAksi = document.getElementById("btn-cari-aksi");
   if (btnCariAksi && searchInput) {
-    btnCariAksi.onclick = (e) => {
+    btnCariAksi.onclick = function(e) {
       e.preventDefault();
       if (!searchInput.value.trim()) {
         window.creazAlert("Ketik nama keripik yang ingin kamu cari dulu ya!", "Kolom Pencarian Kosong", "🔍");
@@ -430,3 +467,5 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 window.scrollTo(0, 0);
+
+setTimeout(function(){ var l=document.getElementById("loading-screen"); if(l){ l.style.opacity="0"; setTimeout(function(){ if(l) l.remove(); }, 400); } }, 2500);
