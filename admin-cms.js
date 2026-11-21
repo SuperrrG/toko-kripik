@@ -383,7 +383,7 @@
   };
 
   window.hapusProdukAdmin = async (i) => {
-    if (!confirm("Hapus produk " + daftarProduk[i].nama + "?")) return;
+    if (window.creazConfirm ? !(await window.creazConfirm("Hapus produk " + daftarProduk[i].nama + "?")) return;
     const token = document.getElementById("adm-token").value.trim();
     if (!token) return window.creazAlert("Token belum aktif!");
     daftarProduk.splice(i, 1);

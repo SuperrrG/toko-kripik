@@ -11,6 +11,33 @@
     }
     return m;
   }
+    window.creazConfirm = function(pesan, judul, teksYa) {
+    return new Promise((resolve) => {
+      let m = document.getElementById("creaz-custom-dialog");
+      if (!m) {
+        m = document.createElement("div");
+        m.id = "creaz-custom-dialog";
+        m.style.cssText = "position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(45,22,6,0.65);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:2147483647;padding:20px;box-sizing:border-box;";
+        document.body.appendChild(m);
+      }
+      m.innerHTML = `<div style="background:#fef7dc;border:2.5px solid #5a2d0c;border-radius:22px;padding:22px 20px;max-width:320px;width:100%;text-align:center;box-shadow:0 10px 28px rgba(0,0,0,0.35);">
+        <img src="logo.jpg" alt="Crea'Z" style="width:54px;height:54px;border-radius:50%;object-fit:cover;border:2.5px solid #5a2d0c;margin:0 auto 6px;display:block;" onerror="this.style.display='none'">
+        <div style="font-size:13px;font-weight:900;color:#5a2d0c;margin-bottom:6px;">Keripik Crea'z</div>
+        <div style="font-size:28px;margin-bottom:4px;">🤔</div>
+        <h3 style="font-size:16px;font-weight:900;color:#5a2d0c;margin:0 0 6px;">${judul || "Konfirmasi Tindakan"}</h3>
+        <p style="font-size:13px;font-weight:700;color:#8c5228;line-height:1.45;margin:0 0 14px;">${pesan}</p>
+        <div style="display:flex;gap:8px;">
+          <button type="button" id="creaz-cfm-batal" style="flex:1;background:#fff;color:#5a2d0c;border:2px solid #5a2d0c;border-radius:12px;padding:10px;font-size:13px;font-weight:800;cursor:pointer;">Batal</button>
+          <button type="button" id="creaz-cfm-ya" style="flex:1;background:#f4be2c;color:#5a2d0c;border:2px solid #5a2d0c;border-radius:12px;padding:10px;font-size:13px;font-weight:900;cursor:pointer;box-shadow:0 3px 0 #5a2d0c;">${teksYa || "Ya, Lanjutkan"}</button>
+        </div>
+        <small style="margin-top:10px;font-size:10px;font-weight:800;color:#8c5228;display:block;">Created by SuperG &bull; Designed by M.A.Y</small>
+      </div>`;
+      m.style.display = "flex";
+      document.getElementById("creaz-cfm-batal").onclick = () => { m.style.display = "none"; resolve(false); };
+      document.getElementById("creaz-cfm-ya").onclick = () => { m.style.display = "none"; resolve(true); };
+    });
+  };
+
   window.creazAlert = function(pesan, judul, ikon) {
     return new Promise((resolve) => {
       const m = buatModal();
@@ -415,7 +442,8 @@ document.addEventListener("DOMContentLoaded", () => {
             <div style="position:relative;z-index:2;">
               <img src="logo.jpg" alt="Logo Crea'Z" style="width:94px;height:94px;border-radius:50%;object-fit:cover;border:3px solid #5a2d0c;box-shadow:0 4px 10px rgba(90,45,12,0.2);margin:0 auto 10px;">
               <h3 style="font-size:20px;font-weight:900;margin-bottom:2px;color:#5a2d0c;">Keripik Crea'z</h3>
-              <p style="font-size:10.5px;font-weight:800;color:#8c5228;letter-spacing:1.2px;margin-bottom:10px;">NIKMAT SETIAP GIGITAN</p>
+              <p style="font-size:10.5px;font-weight:800;color:#8c5228;letter-spacing:1.2px;margin-bottom:4px;">NIKMAT SETIAP GIGITAN</p>
+              <small style="font-size:10.5px;font-weight:800;color:#8c5228;letter-spacing:0.4px;display:block;margin-bottom:10px;">Created by SuperG &bull; Designed by M.A.Y</small>
               <div style="display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin-bottom:10px;">
                 <span style="background:#5a2d0c;color:#fef7dc;font-size:10px;font-weight:800;padding:3px 9px;border-radius:99px;">✅ 100% Halal</span>
                 <span style="background:#f4be2c;color:#5a2d0c;border:1px solid #5a2d0c;font-size:10px;font-weight:800;padding:3px 9px;border-radius:99px;">🌿 Tanpa Pengawet</span>
