@@ -43,7 +43,7 @@
     "harga": 10000,
     "oldHarga": 12000,
     "diskon": "Hemat",
-    "stok": true,
+    "stok": false,
     "img": "produk6.jpg",
     "desk": "Keripik singkong dengan rasa seblak yang gurih pedas. Halal, tanpa pengawet, dan tanpa pewarna buatan."
   },
