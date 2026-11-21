@@ -364,32 +364,118 @@
       </div>`).join("");
   }
 
-  window.toggleStokAdmin = async (i) => {
+  function creazConfirmAdmin(pesan, judul, teksYa, warnaYa) {
+    return new Promise(function(resolve) {
+      let m = document.getElementById("creaz-custom-dialog");
+      if (!m) {
+        m = document.createElement("div");
+        m.id = "creaz-custom-dialog";
+        m.style.cssText = "position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(45,22,6,0.65);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:2147483647;padding:20px;box-sizing:border-box;";
+        document.body.appendChild(m);
+      }
+      const bgYa = warnaYa || "#f4be2c";
+      const colYa = warnaYa ? "#fff" : "#5a2d0c";
+      m.innerHTML = `<div style="background:#fef7dc;border:2.5px solid #5a2d0c;border-radius:22px;padding:22px 20px;max-width:320px;width:100%;text-align:center;box-shadow:0 10px 28px rgba(0,0,0,0.35);">
+        <img src="logo.jpg" alt="Crea'Z" style="width:54px;height:54px;border-radius:50%;object-fit:cover;border:2.5px solid #5a2d0c;margin:0 auto 6px;display:block;" onerror="this.style.display='none'">
+        <div style="font-size:13px;font-weight:900;color:#5a2d0c;margin-bottom:6px;">Keripik Crea'z</div>
+        <div style="font-size:28px;margin-bottom:4px;">🤔</div>
+        <h3 style="font-size:16px;font-weight:900;color:#5a2d0c;margin:0 0 6px;">${judul}</h3>
+        <p style="font-size:13px;font-weight:700;color:#8c5228;line-height:1.45;margin:0 0 14px;">${pesan}</p>
+        <div style="display:flex;gap:8px;">
+          <button type="button" id="creaz-adm-batal" style="flex:1;background:#fff;color:#5a2d0c;border:2px solid #5a2d0c;border-radius:12px;padding:10px;font-size:13px;font-weight:800;cursor:pointer;">Batal</button>
+          <button type="button" id="creaz-adm-ya" style="flex:1;background:${bgYa};color:${colYa};border:2px solid #5a2d0c;border-radius:12px;padding:10px;font-size:13px;font-weight:900;cursor:pointer;box-shadow:0 3px 0 #5a2d0c;">${teksYa}</button>
+        </div>
+        <small style="margin-top:10px;font-size:10px;font-weight:800;color:#8c5228;display:block;">Created by SuperG &bull; Designed by M.A.Y</small>
+      </div>`;
+      m.style.display = "flex";
+      document.getElementById("creaz-adm-batal").onclick = function() { m.style.display = "none"; resolve(false); };
+      document.getElementById("creaz-adm-ya").onclick = function() { m.style.display = "none"; resolve(true); };
+    });
+  }
+
+  function setLoaderAdminAksi(aktif, teks) {
+    let box = document.getElementById("aksi-loader-box");
+    if (!box) {
+      box = document.createElement("div");
+      box.id = "aksi-loader-box";
+      box.style.cssText = "position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(45,22,6,0.58);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:2147483647;text-align:center;padding:24px;box-sizing:border-box;";
+      box.innerHTML = `<div style="background:rgba(254,247,220,0.96);border:2.5px solid #5a2d0c;border-radius:22px;padding:22px 24px;box-shadow:0 10px 28px rgba(0,0,0,0.35);max-width:290px;width:100%;">
+        <img src="logo.jpg" alt="Crea'Z" class="spinner-logo" style="width:76px;height:76px;border-radius:50%;object-fit:cover;border:3px solid #5a2d0c;margin:0 auto 10px;display:block;" onerror="this.style.display='none'">
+        <strong style="font-size:19px;font-weight:900;color:#5a2d0c;margin-bottom:4px;display:block;">Keripik Crea'z</strong>
+        <p id="aksi-loader-teks" style="font-size:13.5px;font-weight:800;color:#8c5228;margin:0;line-height:1.4;">Memproses...</p>
+        <small style="margin-top:10px;font-size:10.5px;font-weight:800;color:#8c5228;display:block;">Created by SuperG &bull; Designed by M.A.Y</small>
+      </div>`;
+      document.body.appendChild(box);
+    }
+    const pEl = document.getElementById("aksi-loader-teks");
+    if (pEl && teks) pEl.innerText = teks;
+    box.style.display = aktif ? "flex" : "none";
+  }
+
+  window.toggleStokAdmin = async function(i) {
     const token = document.getElementById("adm-token").value.trim();
     if (!token) return window.creazAlert("Token belum aktif!");
-    daftarProduk[i].stok = !daftarProduk[i].stok;
-    renderDaftarAdmin(); renderKatalog(daftarProduk);
-    const jsonStr = btoa(unescape(encodeURIComponent(JSON.stringify(daftarProduk, null, 2))));
-    await uploadKeGitHub(token, "products.json", jsonStr, "Ubah stok " + daftarProduk[i].nama);
+    const item = daftarProduk[i];
+    const statusTarget = !item.stok ? "TERSEDIA (Set Ada)" : "HABIS (Set Habis)";
+    const yakin = await creazConfirmAdmin(
+      "Ubah status stok <b>" + item.nama + "</b> menjadi <b>" + statusTarget + "</b>?",
+      "Konfirmasi Ubah Stok",
+      "Ya, Ubah",
+      !item.stok ? "#16a34a" : "#dc2626"
+    );
+    if (!yakin) return;
+    setLoaderAdminAksi(true, "🔄 Memperbarui status stok...");
+    try {
+      daftarProduk[i].stok = !daftarProduk[i].stok;
+      renderDaftarAdmin(); renderKatalog(daftarProduk);
+      const jsonStr = btoa(unescape(encodeURIComponent(JSON.stringify(daftarProduk, null, 2))));
+      await uploadKeGitHub(token, "products.json", jsonStr, "Ubah stok " + item.nama);
+      setLoaderAdminAksi(false);
+      window.creazAlert("Status stok <b>" + item.nama + "</b> berhasil diubah menjadi <b>" + statusTarget + "</b>!", "Stok Diperbarui", "✅");
+    } catch (err) {
+      setLoaderAdminAksi(false);
+      window.creazAlert("Gagal mengubah stok: " + err.message);
+    }
   };
 
-  window.editProdukAdmin = (i) => {
+  window.editProdukAdmin = function(i) {
     const p = daftarProduk[i];
-    document.getElementById("adm-edit-idx").value = i; document.getElementById("adm-nama").value = p.nama;
-    document.getElementById("adm-harga").value = p.harga; document.getElementById("adm-old").value = p.oldHarga || "";
-    document.getElementById("adm-kat").value = p.kategori; document.getElementById("adm-tag").value = p.tag;
-    document.getElementById("adm-desk").value = p.desk; document.getElementById("adm-form-judul").innerText = "✏️ Edit: " + p.nama;
-    document.querySelector(".admin-modal-box").scrollTop = 0;
+    document.getElementById("adm-edit-idx").value = i;
+    document.getElementById("adm-nama").value = p.nama;
+    document.getElementById("adm-harga").value = p.harga;
+    document.getElementById("adm-old").value = p.oldHarga || "";
+    document.getElementById("adm-kat").value = p.kategori;
+    document.getElementById("adm-tag").value = p.tag;
+    document.getElementById("adm-desk").value = p.desk;
+    document.getElementById("adm-form-judul").innerText = "✏️ Edit: " + p.nama;
+    const modalBox = document.querySelector(".admin-modal-box");
+    if (modalBox) modalBox.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(function() { document.getElementById("adm-nama").focus(); }, 350);
   };
 
-  window.hapusProdukAdmin = async (i) => {
-    if (!confirm("Hapus produk " + daftarProduk[i].nama + "?")) return;
+  window.hapusProdukAdmin = async function(i) {
     const token = document.getElementById("adm-token").value.trim();
     if (!token) return window.creazAlert("Token belum aktif!");
-    daftarProduk.splice(i, 1);
-    renderDaftarAdmin(); renderKatalog(daftarProduk);
-    const jsonStr = btoa(unescape(encodeURIComponent(JSON.stringify(daftarProduk, null, 2))));
-    await uploadKeGitHub(token, "products.json", jsonStr, "Hapus produk");
+    const namaHapus = daftarProduk[i].nama;
+    const yakin = await creazConfirmAdmin(
+      "Hapus produk <b>" + namaHapus + "</b> secara permanen dari katalog?",
+      "Konfirmasi Hapus Produk",
+      "Ya, Hapus",
+      "#dc2626"
+    );
+    if (!yakin) return;
+    setLoaderAdminAksi(true, "🗑️ Menghapus produk dari katalog...");
+    try {
+      daftarProduk.splice(i, 1);
+      renderDaftarAdmin(); renderKatalog(daftarProduk);
+      const jsonStr = btoa(unescape(encodeURIComponent(JSON.stringify(daftarProduk, null, 2))));
+      await uploadKeGitHub(token, "products.json", jsonStr, "Hapus produk " + namaHapus);
+      setLoaderAdminAksi(false);
+      window.creazAlert("Produk <b>" + namaHapus + "</b> telah berhasil dihapus!", "Produk Dihapus", "✅");
+    } catch (err) {
+      setLoaderAdminAksi(false);
+      window.creazAlert("Gagal menghapus produk: " + err.message);
+    }
   };
 
   function kompresGambar(file) {
