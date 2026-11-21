@@ -19,7 +19,7 @@
     "harga": 8000,
     "oldHarga": 10000,
     "diskon": "-20%",
-    "stok": false,
+    "stok": true,
     "img": "produk4.jpg",
     "desk": "Keripik singkong dengan rasa original yang gurih dan renyah. Halal, tanpa pengawet, dan tanpa pewarna buatan."
   },
@@ -70,41 +70,5 @@
     "stok": false,
     "img": "produk2.png",
     "desk": "Keripik talas rasa balado yang gurih dan pedas. Halal, tanpa pengawet, dan tanpa pewarna buatan."
-  },
-  {
-    "id": "p1795146476121",
-    "kategori": "talas",
-    "tag": "Baru",
-    "nama": "Black Mangga",
-    "harga": 17000,
-    "oldHarga": 19000,
-    "diskon": "Promo",
-    "stok": false,
-    "img": "produk_1795146473309.jpg",
-    "desk": "Halal, tanpa pengawet, dan tanpa pewarna buatan."
-  },
-  {
-    "id": "p1795148964622",
-    "kategori": "pisang",
-    "tag": "Baru",
-    "nama": "Black Mangga",
-    "harga": 17000,
-    "oldHarga": 19000,
-    "diskon": "Promo",
-    "stok": false,
-    "img": "produk_1795148960893.jpg",
-    "desk": "Halal, tanpa pengawet, dan tanpa pewarna buatan."
-  },
-  {
-    "id": "p1795220898882",
-    "kategori": "Keripik Singkong",
-    "tag": "Baru",
-    "nama": "Black Mangga",
-    "harga": 17000,
-    "oldHarga": 19000,
-    "diskon": "Promo",
-    "stok": true,
-    "img": "produk_1795220895542.jpg",
-    "desk": "Halal, tanpa pengawet, dan tanpa pewarna buatan."
   }
 ]
