@@ -365,17 +365,12 @@
   }
 
   window.toggleStokAdmin = async (i) => {
-    const p = daftarProduk[i];
-    const statusBaru = !p.stok ? "TERSEDIA" : "HABIS";
-    const yakin = await window.creazConfirm(`Ubah status stok "${p.nama}" menjadi ${statusBaru}?`, "Konfirmasi Ubah Stok", "Ya, Ubah");
-    if (!yakin) return;
     const token = document.getElementById("adm-token").value.trim();
     if (!token) return window.creazAlert("Token belum aktif!");
-    p.stok = !p.stok;
+    daftarProduk[i].stok = !daftarProduk[i].stok;
     renderDaftarAdmin(); renderKatalog(daftarProduk);
     const jsonStr = btoa(unescape(encodeURIComponent(JSON.stringify(daftarProduk, null, 2))));
-    await uploadKeGitHub(token, "products.json", jsonStr, "Ubah stok " + p.nama);
-    window.creazAlert(`Status stok "${p.nama}" berhasil diubah menjadi ${statusBaru}!`, "Stok Diperbarui", "✅");
+    await uploadKeGitHub(token, "products.json", jsonStr, "Ubah stok " + daftarProduk[i].nama);
   };
 
   window.editProdukAdmin = (i) => {
@@ -388,7 +383,7 @@
   };
 
   window.hapusProdukAdmin = async (i) => {
-    if (!(await window.creazConfirm(`Hapus produk "${daftarProduk[i].nama}" secara permanen?`, "Konfirmasi Hapus", "Ya, Hapus"))) return;
+    if (!confirm("Hapus produk " + daftarProduk[i].nama + "?")) return;
     const token = document.getElementById("adm-token").value.trim();
     if (!token) return window.creazAlert("Token belum aktif!");
     daftarProduk.splice(i, 1);
