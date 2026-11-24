@@ -12,18 +12,6 @@
     "desk": "Keripik talas dengan rasa jagung manis yang gurih dan renyah. Halal, tanpa pengawet, dan tanpa pewarna buatan."
   },
   {
-    "id": "p1795328569857",
-    "kategori": "singkong",
-    "tag": "Singkong • Promo",
-    "nama": "Keripik Singkong Crea'z — Rasa Original",
-    "harga": 10000,
-    "oldHarga": 1100,
-    "diskon": "",
-    "stok": true,
-    "img": "produk4.jpg",
-    "desk": "Keripik singkong dengan rasa original yang gurih dan renyah. Halal, tanpa pengawet, dan tanpa pewarna buatan."
-  },
-  {
     "id": "p1795510924428",
     "kategori": "singkong",
     "tag": "Singkong • Best Seller",
@@ -36,39 +24,39 @@
     "desk": "Keripik singkong dengan rasa pedas manis yang gurih dan renyah. Halal, tanpa pengawet, dan tanpa pewarna buatan."
   },
   {
-    "id": "p1795511888018",
+    "id": "p6",
     "kategori": "singkong",
-    "tag": "Singkong • Seblak gurih pedas",
+    "tag": "Singkong • Seblak",
     "nama": "Keripik Singkong Crea'z — Rasa Seblak",
     "harga": 10000,
     "oldHarga": 12000,
-    "diskon": "Promo",
+    "diskon": "Hemat",
     "stok": true,
-    "img": "produk_1795511884673.jpg",
+    "img": "produk6.jpg",
     "desk": "Keripik singkong dengan rasa seblak yang gurih pedas. Halal, tanpa pengawet, dan tanpa pewarna buatan."
   },
   {
-    "id": "p1795328515138",
+    "id": "p1795511109771",
     "kategori": "talas",
     "tag": "Talas • Promo",
     "nama": "Keripik Talas Crea'z — Rasa Asli",
-    "harga": 10000,
-    "oldHarga": 12000,
+    "harga": 7000,
+    "oldHarga": 10000,
     "diskon": "Promo",
-    "stok": true,
-    "img": "produk1.png",
+    "stok": false,
+    "img": "produk_1795511106747.jpg",
     "desk": "Keripik talas dengan rasa alami yang gurih dan renyah. Halal, tanpa pengawet, dan tanpa pewarna buatan."
   },
   {
-    "id": "p2",
+    "id": "p1795511039832",
     "kategori": "talas",
     "tag": "Talas • Terlaris",
     "nama": "Keripik Talas Crea'z — Rasa Balado",
     "harga": 10000,
     "oldHarga": 12000,
-    "diskon": "Hemat",
+    "diskon": "Promo",
     "stok": true,
-    "img": "produk2.png",
+    "img": "produk_1795511036482.jpg",
     "desk": "Keripik talas rasa balado yang gurih dan pedas. Halal, tanpa pengawet, dan tanpa pewarna buatan."
   }
 ]
