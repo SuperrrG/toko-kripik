@@ -3,7 +3,7 @@
   const OWNER_PIN = "998877";
   const LS_LOG_KEY = "creaz_owner_visitors_v1";
   const LS_FB_KEY = "creaz_owner_firebase_url";
-  const DEFAULT_FB_URL = "";
+  const DEFAULT_FB_URL = "https://creaz-visitor-default-rtdb.asia-southeast1.firebasedatabase.app";
 
   function getFirebaseUrl() {
     const saved = (localStorage.getItem(LS_FB_KEY) || DEFAULT_FB_URL).trim();
