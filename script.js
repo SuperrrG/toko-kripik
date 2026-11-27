@@ -342,7 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
             info = `<div style="width:100%;font-size:11.5px;color:#15803d;background:#dcfce7;border:1px solid #86efac;border-radius:8px;padding:6px 8px;margin-bottom:8px;text-align:center;font-weight:800;">🎉 Diskon 20% (-Rp ${diskon.toLocaleString("id-ID")}) aktif untuk: <b>${produkDiskonList.join(", ")}</b>!</div>`;
           } else {
             const kurang = this.MIN_GROSIR - maksQtySatuProduk;
-            const catCampur = data.length > 1 ? "<br><span style="font-size:10.5px;color:#b91c1c;">*Pembelian campur tidak digabung (harus 1 produk sama)</span>" : "";
+            const catCampur = data.length > 1 ? `<br><span style="font-size:10.5px;color:#b91c1c;">*Pembelian campur tidak digabung (harus 1 produk sama)</span>` : "";
             info = `<div style="width:100%;font-size:11.5px;color:#8c5228;background:#fef7dc;border:1px dashed #5a2d0c;border-radius:8px;padding:6px 8px;margin-bottom:8px;text-align:center;font-weight:700;">💡 Beli <b>${kurang} pcs lagi</b> pada <b>1 produk yang sama</b> untuk dapat <b>Beli banyak lebih hemat (Diskon 20%)</b>!${catCampur}</div>`;
           }
         }
