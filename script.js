@@ -455,6 +455,9 @@ document.addEventListener("DOMContentLoaded", () => {
             logTerjual[item.nama] = (Number(logTerjual[item.nama]) || 0) + Number(item.qty);
           });
           localStorage.setItem("creaz_terjual_log", JSON.stringify(logTerjual));
+          if (window.CREAZ_STATS) {
+            keranjang.forEach(item => window.CREAZ_STATS.catatTerjualProduk(item.nama, item.qty));
+          }
         } catch (e) {}
 
         window.tampilLoadingAksi("💬 Memproses pesanan ke WhatsApp...", 1600, () => {
@@ -488,6 +491,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <div style="display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin-bottom:10px;">
                 <span style="background:#5a2d0c;color:#fef7dc;font-size:10px;font-weight:800;padding:3px 9px;border-radius:99px;">✅ 100% Halal</span>
                 <span style="background:#f4be2c;color:#5a2d0c;border:1px solid #5a2d0c;font-size:10px;font-weight:800;padding:3px 9px;border-radius:99px;">🌿 Tanpa Pengawet</span>
+                <span id="badge-profil-views" style="background:#fff;color:#5a2d0c;border:1.5px solid #5a2d0c;font-size:10px;font-weight:900;padding:3px 9px;border-radius:99px;">👁️ Profil dilihat ...</span>
               </div>
               <div style="background:#fff;border:1.5px solid #e6dec8;border-radius:12px;padding:10px;margin-bottom:12px;text-align:left;font-size:12px;color:#5a2d0c;line-height:1.55;">
                 <div style="margin-bottom:4px;">🥔 <b>Produk:</b> Aneka keripik &amp; camilan renyah pilihan alami.</div>
@@ -566,6 +570,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const kat = document.getElementById("katalog"); if (kat) kat.scrollIntoView({ behavior: "smooth" });
           }
         };
+      }
+      if (window.CREAZ_STATS) {
+        window.CREAZ_STATS.catatDanAmbilProfil().then(v => {
+          const elPv = document.getElementById("badge-profil-views");
+          if (elPv) elPv.innerText = `👁️ Profil dilihat ${v}x`;
+        });
       }
       window.tampilLoadingAksi("✨ Membuka profil Keripik Crea'z...", 1600, () => { bModal.classList.add("active"); bModal.style.display = "flex"; bModal.style.opacity = "1"; bModal.style.pointerEvents = "auto"; bukaOverlay(); });
     });

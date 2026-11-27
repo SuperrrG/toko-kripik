@@ -159,7 +159,14 @@
           badgeTerjual.style.cssText = "display:inline-block;background:#fef7dc;border:1.5px solid #5a2d0c;color:#5a2d0c;font-size:12px;font-weight:800;padding:4px 10px;border-radius:8px;margin:4px 0 10px;";
           document.getElementById("modal-price").insertAdjacentElement("afterend", badgeTerjual);
         }
-        badgeTerjual.innerText = `🛍️ Penjualan: Sudah dibeli ${jmlTerjual} kali`;
+        badgeTerjual.innerText = `👁️ Memuat statistik produk...`;
+        if (window.CREAZ_STATS) {
+          window.CREAZ_STATS.catatLihatDetailProduk(p.nama).then(st => {
+            badgeTerjual.innerText = `👁️ Dilihat ${st.views}x • 🛍️ Sudah dibeli ${st.sold} kali`;
+          });
+        } else {
+          badgeTerjual.innerText = `🛍️ Sudah dibeli ${jmlTerjual} kali`;
+        }
         const mAdd = document.getElementById("modal-add-btn");
         mAdd.disabled = !p.stok; mAdd.innerText = p.stok ? "+ Tambah ke Keranjang" : "Stok Habis";
         mAdd.onclick = () => { if (p.stok) { tambahKeKeranjangGlobal(p); document.getElementById("close-modal").click(); } };
