@@ -107,9 +107,27 @@
           method: "POST", headers: { "Content-Type": "application/json" },
           body: JSON.stringify(record)
         });
+        const metaRes = await fetch(`${fbUrl}/visitors_meta.json`);
+        const meta = (await metaRes.json()) || {};
+        const vRes = await fetch(`${fbUrl}/visitors.json`);
+        const vObj = (await vRes.json()) || {};
+        const keys = Object.keys(vObj);
+        const totalBaru = Math.max(Number(meta.total) || 0, keys.length - 1) + 1;
+        await fetch(`${fbUrl}/visitors_meta.json`, {
+          method: "PATCH", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ total: totalBaru })
+        });
+        if (keys.length > 100) {
+          const urut = keys.sort((a, b) => (vObj[a].id || 0) - (vObj[b].id || 0));
+          const hapusKeys = urut.slice(0, keys.length - 100);
+          for (const k of hapusKeys) {
+            await fetch(`${fbUrl}/visitors/${k}.json`, { method: "DELETE" });
+          }
+        }
       } catch (e) {}
     }
   }
+
   function jalankanDenganLoading(pesan, durasi, cb) {
     if (typeof window.tampilLoadingAksi === "function") window.tampilLoadingAksi(pesan, durasi, cb);
     else setTimeout(cb, 300);
@@ -123,13 +141,20 @@
   async function ambilSemuaDataKunjungan() {
     const lokal = JSON.parse(localStorage.getItem(LS_LOG_KEY) || "[]");
     const fbUrl = getFirebaseUrl();
-    if (!fbUrl) return lokal;
+    if (!fbUrl) return { list: lokal, total: lokal.length };
     try {
-      const res = await fetch(`${fbUrl}/visitors.json`);
-      const obj = await res.json();
-      if (!obj || typeof obj !== "object") return lokal;
-      return Object.values(obj).sort((a, b) => (b.id || 0) - (a.id || 0));
-    } catch (e) { return lokal; }
+      const [resV, resM] = await Promise.all([
+        fetch(`${fbUrl}/visitors.json`),
+        fetch(`${fbUrl}/visitors_meta.json`)
+      ]);
+      const obj = await resV.json();
+      const meta = (await resM.json()) || {};
+      const list = (obj && typeof obj === "object")
+        ? Object.values(obj).sort((a, b) => (b.id || 0) - (a.id || 0)).slice(0, 100)
+        : lokal;
+      const total = Math.max(Number(meta.total) || 0, list.length);
+      return { list, total };
+    } catch (e) { return { list: lokal, total: lokal.length }; }
   }
 
   function buatStyleOwner() {
@@ -179,7 +204,7 @@
       });
     };
 
-    const data = await ambilSemuaDataKunjungan();
+    const { list: data, total: totalSemua } = await ambilSemuaDataKunjungan();
     const now = new Date();
     const hariIniKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
     const jmlHariIni = data.filter(d => d.tanggalKey === hariIniKey).length;
@@ -190,7 +215,7 @@
       : data.slice(0, 40).map((v, i) => `
         <div class="owner-visitor-card">
           <div style="display:flex;justify-content:space-between;font-weight:900;color:#5a2d0c;margin-bottom:3px;">
-            <span>#${data.length - i} • ${v.lokasi || "Indonesia"}</span>
+            <span>#${Math.max(1, totalSemua - i)} • ${v.lokasi || "Indonesia"}</span>
             <span style="font-size:11px;color:#8c5228;">${v.waktu || "-"}</span>
           </div>
           <div>📱 <b>HP:</b> ${v.perangkat || "-"}</div>
@@ -201,14 +226,14 @@
 
     document.getElementById("owner-dash-body").innerHTML = `
       <div class="owner-stat-grid">
-        <div class="owner-stat-card"><span style="font-size:11.5px;font-weight:800;">👁️ Total Pengunjung</span><b>${data.length}</b></div>
+        <div class="owner-stat-card"><span style="font-size:11.5px;font-weight:800;">👁️ Total Pengunjung</span><b>${totalSemua}</b></div>
         <div class="owner-stat-card"><span style="font-size:11.5px;font-weight:800;">📅 Hari Ini</span><b>${jmlHariIni}</b></div>
       </div>
       <div style="display:flex;gap:8px;margin-bottom:12px;">
         <button id="owner-refresh-btn" class="owner-btn" style="flex:1;">🔄 Segarkan Data</button>
         <button id="owner-clear-btn" class="owner-btn danger">🗑️ Reset Lokal</button>
       </div>
-      <div style="text-align:left;font-weight:900;font-size:13px;margin-bottom:8px;">📋 Riwayat Pengunjung Terbaru:</div>
+      <div style="text-align:left;font-weight:900;font-size:13px;margin-bottom:8px;">📋 Riwayat Pengunjung Terbaru (Maks 100):</div>
       <div style="text-align:left;">${daftarHTML}</div>
       <div style="margin-top:14px;padding-top:10px;border-top:1.5px dashed #5a2d0c;text-align:center;font-size:11px;font-weight:800;color:#8c5228;">Created by SuperG &bull; Designed by M.A.Y</div>
     `;
