@@ -317,19 +317,39 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      const diskon = totalQty >= this.MIN_GROSIR ? Math.round(totalHarga * this.DISKON_GROSIR) : 0;
+      let diskon = 0;
+      let produkDiskonList = [];
+      let maksQtySatuProduk = 0;
+      data.forEach(item => {
+        const q = Number(item.qty);
+        const subItem = Number(item.harga) * q;
+        if (q > maksQtySatuProduk) maksQtySatuProduk = q;
+        if (q >= this.MIN_GROSIR) {
+          const potItem = Math.round(subItem * this.DISKON_GROSIR);
+          diskon += potItem;
+          produkDiskonList.push(`${item.nama} (${q}x)`);
+        }
+      });
+
       const totalAkhir = totalHarga - diskon;
       if (badge) badge.innerText = totalQty;
 
       const totalRow = document.querySelector(".total-row");
       if (totalRow) {
-        const info = totalQty > 0 && totalQty < this.MIN_GROSIR
-          ? `<div style="width:100%;font-size:11.5px;color:#8c5228;background:#fef7dc;border:1px dashed #5a2d0c;border-radius:8px;padding:6px 8px;margin-bottom:8px;text-align:center;font-weight:700;">💡 Tambah <b>${this.MIN_GROSIR - totalQty} pcs lagi</b> untuk otomatis dapat <b>Diskon 20%</b>!</div>`
-          : (totalQty >= this.MIN_GROSIR ? `<div style="width:100%;font-size:11.5px;color:#15803d;background:#dcfce7;border:1px solid #86efac;border-radius:8px;padding:6px 8px;margin-bottom:8px;text-align:center;font-weight:800;">🎉 Diskon Grosir 20% (-Rp ${diskon.toLocaleString("id-ID")}) aktif!</div>` : "");
+        let info = "";
+        if (totalQty > 0) {
+          if (diskon > 0) {
+            info = `<div style="width:100%;font-size:11.5px;color:#15803d;background:#dcfce7;border:1px solid #86efac;border-radius:8px;padding:6px 8px;margin-bottom:8px;text-align:center;font-weight:800;">🎉 Diskon 20% (-Rp ${diskon.toLocaleString("id-ID")}) aktif untuk: <b>${produkDiskonList.join(", ")}</b>!</div>`;
+          } else {
+            const kurang = this.MIN_GROSIR - maksQtySatuProduk;
+            const catCampur = data.length > 1 ? "<br><span style="font-size:10.5px;color:#b91c1c;">*Pembelian campur tidak digabung (harus 1 produk sama)</span>" : "";
+            info = `<div style="width:100%;font-size:11.5px;color:#8c5228;background:#fef7dc;border:1px dashed #5a2d0c;border-radius:8px;padding:6px 8px;margin-bottom:8px;text-align:center;font-weight:700;">💡 Beli <b>${kurang} pcs lagi</b> pada <b>1 produk yang sama</b> untuk dapat <b>Beli banyak lebih hemat (Diskon 20%)</b>!${catCampur}</div>`;
+          }
+        }
         totalRow.style.display = "block";
         totalRow.innerHTML = info + (diskon > 0
           ? `<div style="display:flex;justify-content:space-between;font-size:12px;color:#8c5228;margin-bottom:2px;"><span>Subtotal (${totalQty} pcs):</span><span style="text-decoration:line-through;">Rp ${totalHarga.toLocaleString("id-ID")}</span></div>
-             <div style="display:flex;justify-content:space-between;font-weight:900;font-size:15px;color:#5a2d0c;"><span>Total Akhir (-20%):</span><strong id="cart-total">Rp ${totalAkhir.toLocaleString("id-ID")}</strong></div>`
+             <div style="display:flex;justify-content:space-between;font-weight:900;font-size:15px;color:#5a2d0c;"><span>Total Akhir:</span><strong id="cart-total">Rp ${totalAkhir.toLocaleString("id-ID")}</strong></div>`
           : `<div style="display:flex;justify-content:space-between;font-weight:900;font-size:15px;color:#5a2d0c;"><span>Total:</span><strong id="cart-total">Rp ${totalHarga.toLocaleString("id-ID")}</strong></div>`);
       }
     }
@@ -354,36 +374,47 @@ document.addEventListener("DOMContentLoaded", () => {
       if (keranjang.length === 0) return alert("Pilih produk Crea'z dulu ya!");
       const nama = document.getElementById("nama-pemesan").value.trim();
       const alamat = document.getElementById("alamat-pemesan").value.trim();
-      if (!nama || !alamat) return alert("Mohon isi Nama dan Alamat pengiriman dulu ya!");
+      const tglInput = document.getElementById("tanggal-kebutuhan") ? document.getElementById("tanggal-kebutuhan").value : "";
+      if (!nama || !alamat || !tglInput) return alert("Mohon isi Nama, Alamat pengiriman, dan Tanggal kebutuhan pesanan dulu ya!");
 
-      let subAll = 0, qtyAll = 0, listHTML = "";
+      const daftarHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+      const daftarBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+      const [thn, bln, hri] = tglInput.split("-").map(Number);
+      const objTgl = new Date(thn, bln - 1, hri);
+      const tglLengkap = `${daftarHari[objTgl.getDay()]}, ${hri} ${daftarBulan[bln - 1]} ${thn}`;
+
+      let subAll = 0, qtyAll = 0, pot = 0, listHTML = "";
       let teksWA = `Halo Kak, saya mau pesan *Keripik Crea'z*:\n\n`;
 
       keranjang.forEach((item, idx) => {
         const sub = item.harga * item.qty;
         subAll += sub; qtyAll += item.qty;
+        const dapatDiskonItem = item.qty >= window.CREAZ_STORE.MIN_GROSIR;
+        const potItem = dapatDiskonItem ? Math.round(sub * window.CREAZ_STORE.DISKON_GROSIR) : 0;
+        pot += potItem;
+        const labelDiskonItem = dapatDiskonItem ? ` <span style="color:#15803d;font-weight:800;">(-20%)</span>` : "";
+
         listHTML += `<div style="display:flex;justify-content:space-between;font-size:12.5px;padding:4px 0;border-bottom:1px dashed #e6dec8;">
-          <span>${idx + 1}. <b>${item.nama}</b> (${item.qty}x)</span>
+          <span>${idx + 1}. <b>${item.nama}</b> (${item.qty}x)${labelDiskonItem}</span>
           <span style="font-weight:700;">Rp ${sub.toLocaleString("id-ID")}</span>
         </div>`;
-        teksWA += `${idx + 1}. *${item.nama}* (${item.qty}x @ Rp ${item.harga.toLocaleString("id-ID")}) = Rp ${sub.toLocaleString("id-ID")}\n`;
+        teksWA += `${idx + 1}. *${item.nama}* (${item.qty}x @ Rp ${item.harga.toLocaleString("id-ID")}) = Rp ${sub.toLocaleString("id-ID")}${dapatDiskonItem ? " [Hemat 20%]" : ""}\n`;
       });
 
-      const pot = qtyAll >= window.CREAZ_STORE.MIN_GROSIR ? Math.round(subAll * window.CREAZ_STORE.DISKON_GROSIR) : 0;
       const totalAkhir = subAll - pot;
 
       let ringkasanHTML = `<div style="display:flex;justify-content:space-between;font-size:12.5px;margin-top:8px;"><span>Total Barang (${qtyAll} pcs):</span><span>Rp ${subAll.toLocaleString("id-ID")}</span></div>`;
       if (pot > 0) {
-        ringkasanHTML += `<div style="display:flex;justify-content:space-between;font-size:12.5px;color:#15803d;font-weight:800;"><span>🎉 Diskon Grosir 20%:</span><span>-Rp ${pot.toLocaleString("id-ID")}</span></div>`;
+        ringkasanHTML += `<div style="display:flex;justify-content:space-between;font-size:12.5px;color:#15803d;font-weight:800;"><span>🎉 Beli Banyak Lebih Hemat (-20%):</span><span>-Rp ${pot.toLocaleString("id-ID")}</span></div>`;
         teksWA += `\nSubtotal (${qtyAll} pcs): Rp ${subAll.toLocaleString("id-ID")}`;
-        teksWA += `\n🎉 *Diskon Grosir 20% (≥10 pcs): -Rp ${pot.toLocaleString("id-ID")}*`;
+        teksWA += `\n🎉 *Beli Banyak Lebih Hemat (≥10 pcs 1 produk): -Rp ${pot.toLocaleString("id-ID")}*`;
         teksWA += `\n*Total Bayar: Rp ${totalAkhir.toLocaleString("id-ID")}*\n\n`;
       } else {
         teksWA += `\n*Total Belanja (${qtyAll} pcs): Rp ${subAll.toLocaleString("id-ID")}*\n\n`;
       }
       ringkasanHTML += `<div style="display:flex;justify-content:space-between;font-size:15px;font-weight:900;color:#5a2d0c;margin-top:6px;padding-top:6px;border-top:2px solid #5a2d0c;"><span>Total Bayar:</span><span>Rp ${totalAkhir.toLocaleString("id-ID")}</span></div>`;
 
-      teksWA += `*Data Penerima:*\nNama: ${nama}\nAlamat: ${alamat}`;
+      teksWA += `*Data Penerima:*\nNama: ${nama}\nAlamat: ${alamat}\nDibutuhkan Tanggal: *${tglLengkap}*`;
 
       let modalVerif = document.getElementById("modal-verif-wa");
       if (!modalVerif) {
@@ -406,6 +437,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div style="background:#fff;border:1px solid #e6dec8;border-radius:8px;padding:8px;margin:10px 0 14px;font-size:12px;color:#5a2d0c;">
             <div><b>Penerima:</b> ${nama}</div>
             <div><b>Alamat:</b> ${alamat}</div>
+            <div><b>Dibutuhkan:</b> ${tglLengkap}</div>
           </div>
           <button id="btn-lanjut-wa" class="btn-primary full-width" style="background:#16a34a;color:#fff;border-color:#5a2d0c;font-size:14px;">✅ Lanjutkan ke WhatsApp</button>
         </div>`;
@@ -416,6 +448,15 @@ document.addEventListener("DOMContentLoaded", () => {
       const waLink = "https" + String.fromCharCode(58,47,47) + "wa." + "me/62895414324511";
       document.getElementById("btn-lanjut-wa").onclick = function() {
         modalVerif.classList.remove("active");
+        // Catat jumlah terjual setiap produk yang dipesan
+        try {
+          const logTerjual = JSON.parse(localStorage.getItem("creaz_terjual_log") || "{}");
+          keranjang.forEach(item => {
+            logTerjual[item.nama] = (Number(logTerjual[item.nama]) || 0) + Number(item.qty);
+          });
+          localStorage.setItem("creaz_terjual_log", JSON.stringify(logTerjual));
+        } catch (e) {}
+
         window.tampilLoadingAksi("💬 Memproses pesanan ke WhatsApp...", 1600, () => {
           window.open(`${waLink}?text=${encodeURIComponent(teksWA)}`, "_blank");
         });

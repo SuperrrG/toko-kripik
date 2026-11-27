@@ -135,7 +135,7 @@
             <span class="new-price">Rp ${Number(p.harga).toLocaleString("id-ID")}</span>
             ${p.diskon ? `<span class="disc-badge">${p.diskon}</span>` : ''}
           </div>
-          <div style="font-size:10.5px;font-weight:800;color:#b91c1c;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:3px 6px;margin-bottom:8px;text-align:center;">🎉 Beli 10+ pcs Diskon 20%</div>
+          <div style="font-size:10.5px;font-weight:800;color:#b91c1c;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:3px 6px;margin-bottom:8px;text-align:center;">🎉 Beli banyak lebih hemat</div>
           <div class="card-actions">
             <button class="btn-detail" data-idx="${idx}">Detail</button>
             <button class="btn-add" data-idx="${idx}" ${!p.stok ? 'disabled' : ''}>${p.stok ? '+ Keranjang' : 'Habis'}</button>
@@ -150,6 +150,16 @@
         document.getElementById("modal-title").innerText = p.nama;
         document.getElementById("modal-price").innerText = "Rp " + Number(p.harga).toLocaleString("id-ID");
         document.getElementById("modal-desc").innerText = p.desk;
+        const logTerjual = JSON.parse(localStorage.getItem("creaz_terjual_log") || "{}");
+        const jmlTerjual = (Number(p.terjual) || 0) + (Number(logTerjual[p.nama]) || 0);
+        let badgeTerjual = document.getElementById("modal-terjual-info");
+        if (!badgeTerjual) {
+          badgeTerjual = document.createElement("div");
+          badgeTerjual.id = "modal-terjual-info";
+          badgeTerjual.style.cssText = "display:inline-block;background:#fef7dc;border:1.5px solid #5a2d0c;color:#5a2d0c;font-size:12px;font-weight:800;padding:4px 10px;border-radius:8px;margin:4px 0 10px;";
+          document.getElementById("modal-price").insertAdjacentElement("afterend", badgeTerjual);
+        }
+        badgeTerjual.innerText = `🛍️ Penjualan: Sudah dibeli ${jmlTerjual} kali`;
         const mAdd = document.getElementById("modal-add-btn");
         mAdd.disabled = !p.stok; mAdd.innerText = p.stok ? "+ Tambah ke Keranjang" : "Stok Habis";
         mAdd.onclick = () => { if (p.stok) { tambahKeKeranjangGlobal(p); document.getElementById("close-modal").click(); } };
