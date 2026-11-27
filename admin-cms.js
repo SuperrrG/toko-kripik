@@ -135,6 +135,7 @@
             <span class="new-price">Rp ${Number(p.harga).toLocaleString("id-ID")}</span>
             ${p.diskon ? `<span class="disc-badge">${p.diskon}</span>` : ''}
           </div>
+          <div class="card-pub-stats" data-idx="${idx}" style="font-size:10.5px;font-weight:800;color:#5a2d0c;background:#fef7dc;border:1px solid #e6dec8;border-radius:6px;padding:3px 6px;margin-bottom:5px;text-align:center;">👁️ Dilihat ... • 🛍️ Terjual ...</div>
           <div style="font-size:10.5px;font-weight:800;color:#b91c1c;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:3px 6px;margin-bottom:8px;text-align:center;">🎉 Beli banyak lebih hemat</div>
           <div class="card-actions">
             <button class="btn-detail" data-idx="${idx}">Detail</button>
@@ -150,22 +151,13 @@
         document.getElementById("modal-title").innerText = p.nama;
         document.getElementById("modal-price").innerText = "Rp " + Number(p.harga).toLocaleString("id-ID");
         document.getElementById("modal-desc").innerText = p.desk;
-        const logTerjual = JSON.parse(localStorage.getItem("creaz_terjual_log") || "{}");
-        const jmlTerjual = (Number(p.terjual) || 0) + (Number(logTerjual[p.nama]) || 0);
-        let badgeTerjual = document.getElementById("modal-terjual-info");
-        if (!badgeTerjual) {
-          badgeTerjual = document.createElement("div");
-          badgeTerjual.id = "modal-terjual-info";
-          badgeTerjual.style.cssText = "display:inline-block;background:#fef7dc;border:1.5px solid #5a2d0c;color:#5a2d0c;font-size:12px;font-weight:800;padding:4px 10px;border-radius:8px;margin:4px 0 10px;";
-          document.getElementById("modal-price").insertAdjacentElement("afterend", badgeTerjual);
-        }
-        badgeTerjual.innerText = `👁️ Memuat statistik produk...`;
+        const oldBadge = document.getElementById("modal-terjual-info");
+        if (oldBadge) oldBadge.remove();
         if (window.CREAZ_STATS) {
           window.CREAZ_STATS.catatLihatDetailProduk(p.nama).then(st => {
-            badgeTerjual.innerText = `👁️ Dilihat ${st.views}x • 🛍️ Sudah dibeli ${st.sold} kali`;
+            const elStat = grid.querySelector(`.card-pub-stats[data-idx="${btn.dataset.idx}"]`);
+            if (elStat) elStat.innerText = `👁️ Dilihat ${st.views}x • 🛍️ Terjual ${st.sold}x`;
           });
-        } else {
-          badgeTerjual.innerText = `🛍️ Sudah dibeli ${jmlTerjual} kali`;
         }
         const mAdd = document.getElementById("modal-add-btn");
         mAdd.disabled = !p.stok; mAdd.innerText = p.stok ? "+ Tambah ke Keranjang" : "Stok Habis";
@@ -177,6 +169,20 @@
 
     grid.querySelectorAll(".btn-add").forEach(btn => {
       btn.onclick = () => { const p = daftarProduk[btn.dataset.idx]; if (p && p.stok) tambahKeKeranjangGlobal(p); };
+    });
+
+    grid.querySelectorAll(".card-pub-stats").forEach(el => {
+      const p = daftarProduk[el.dataset.idx];
+      if (!p) return;
+      if (window.CREAZ_STATS) {
+        window.CREAZ_STATS.ambilStatProduk(p.nama).then(st => {
+          el.innerText = `👁️ Dilihat ${st.views}x • 🛍️ Terjual ${st.sold}x`;
+        });
+      } else {
+        const logLokal = JSON.parse(localStorage.getItem("creaz_terjual_log") || "{}");
+        const jml = (Number(p.terjual) || 0) + (Number(logLokal[p.nama]) || 0);
+        el.innerText = `👁️ Dilihat 0x • 🛍️ Terjual ${jml}x`;
+      }
     });
   }
 
