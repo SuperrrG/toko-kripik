@@ -204,25 +204,14 @@
         <div class="owner-stat-card"><span style="font-size:11.5px;font-weight:800;">👁️ Total Pengunjung</span><b>${data.length}</b></div>
         <div class="owner-stat-card"><span style="font-size:11.5px;font-weight:800;">📅 Hari Ini</span><b>${jmlHariIni}</b></div>
       </div>
-      <div style="background:#fff;border:1.5px solid #5a2d0c;border-radius:12px;padding:10px;margin-bottom:12px;text-align:left;font-size:11.5px;">
-        <div style="font-weight:900;margin-bottom:4px;">☁️ Sinkronisasi Semua HP: ${fbAktif ? '<span style="color:#15803d;">Aktif (Firebase)</span>' : '<span style="color:#b45309;">Lokal HP Ini</span>'}</div>
-        <div style="display:flex;gap:6px;">
-          <input type="text" id="owner-fb-input" value="${getFirebaseUrl()}" placeholder="Tempel URL Firebase (opsional)" style="flex:1;padding:6px 8px;border:1.5px solid #5a2d0c;border-radius:8px;font-size:11.5px;">
-          <button id="owner-save-fb" class="owner-btn" style="padding:6px 10px;">Simpan</button>
-        </div>
-      </div>
       <div style="display:flex;gap:8px;margin-bottom:12px;">
         <button id="owner-refresh-btn" class="owner-btn" style="flex:1;">🔄 Segarkan Data</button>
         <button id="owner-clear-btn" class="owner-btn danger">🗑️ Reset Lokal</button>
       </div>
       <div style="text-align:left;font-weight:900;font-size:13px;margin-bottom:8px;">📋 Riwayat Pengunjung Terbaru:</div>
       <div style="text-align:left;">${daftarHTML}</div>
+      <div style="margin-top:14px;padding-top:10px;border-top:1.5px dashed #5a2d0c;text-align:center;font-size:11px;font-weight:800;color:#8c5228;">Created by SuperG &bull; Designed by M.A.Y</div>
     `;
-    document.getElementById("owner-save-fb").onclick = () => {
-      localStorage.setItem(LS_FB_KEY, document.getElementById("owner-fb-input").value.trim());
-      pesanAlert("Pengaturan sinkronisasi database berhasil disimpan!", "Berhasil Disimpan", "✅");
-      bukaDashboardOwner();
-    };
     document.getElementById("owner-refresh-btn").onclick = () => jalankanDenganLoading("🔄 Memuat ulang statistik...", 900, bukaDashboardOwner);
     document.getElementById("owner-clear-btn").onclick = () => {
       if (confirm("Hapus riwayat pengunjung lokal di perangkat ini?")) {
@@ -248,6 +237,7 @@
           <button id="owner-pin-batal" class="owner-btn danger" style="flex:1;">Batal</button>
           <button id="owner-pin-masuk" class="owner-btn" style="flex:2;background:#16a34a;color:#fff;">Masuk Owner</button>
         </div>
+        <div style="margin-top:12px;font-size:10.5px;font-weight:800;color:#8c5228;">Created by SuperG &bull; Designed by M.A.Y</div>
       </div>
     `;
     document.body.appendChild(wrap);
