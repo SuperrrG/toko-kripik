@@ -479,6 +479,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (navBrandEl) {
     navBrandEl.addEventListener("click", (e) => {
       e.preventDefault();
+      const dot = document.getElementById("nav-notif-dot");
+      if (dot) dot.remove();
+      try { localStorage.setItem("creaz_profil_notif_seen", "1"); } catch (err) {}
       let bModal = document.getElementById("brand-modal");
       if (!bModal) {
         const st = document.createElement("style");
