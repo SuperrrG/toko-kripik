@@ -4,7 +4,7 @@
   document.head.appendChild(stN);
   window.addEventListener("DOMContentLoaded", () => {
     const dot = document.getElementById("nav-notif-dot");
-    if (dot && localStorage.getItem("creaz_profil_notif_seen") === "1") dot.style.display = "none";
+    if (dot && localStorage.getItem("creaz_profil_notif_seen") === "1") dot.remove();
   });
 })();
 (function(){
@@ -482,7 +482,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let bModal = document.getElementById("brand-modal");
       if (!bModal) {
         const st = document.createElement("style");
-        st.innerHTML = `@keyframes hujanJatuh { 0% { transform: translateY(-30px) translateX(0px) rotate(-8deg); opacity: 0; } 12% { opacity: 0.95; } 50% { transform: translateY(290px) translateX(10px) rotate(10deg); opacity: 0.9; } 88% { opacity: 0.85; } 100% { transform: translateY(620px) translateX(-8px) rotate(-6deg); opacity: 0; } } .partikel-hujan { position: absolute; top: -30px; pointer-events: none; font-size: 18px; animation: hujanJatuh ease-in-out infinite; z-index: 1; white-space: nowrap; }`;
+        st.innerHTML = `@keyframes hujanJatuh { 0% { transform: translateY(-40px) rotate(-6deg); opacity: 0; } 8% { opacity: 0.95; } 92% { opacity: 0.9; } 100% { transform: translateY(660px) rotate(8deg); opacity: 0; } } .partikel-hujan { position: absolute; top: -40px; pointer-events: none; font-size: 18px; animation: hujanJatuh linear infinite; z-index: 1; white-space: nowrap; will-change: transform; }`;
         document.head.appendChild(st);
 
         bModal = document.createElement("div");
