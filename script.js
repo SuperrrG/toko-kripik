@@ -1,4 +1,13 @@
 (function(){
+  const stN = document.createElement("style");
+  stN.textContent = "@keyframes notifPop { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.22); } }";
+  document.head.appendChild(stN);
+  window.addEventListener("DOMContentLoaded", () => {
+    const dot = document.getElementById("nav-notif-dot");
+    if (dot && localStorage.getItem("creaz_profil_notif_seen") === "1") dot.style.display = "none";
+  });
+})();
+(function(){
   if (window._creazDialogReady) return;
   window._creazDialogReady = true;
   function buatModal() {
@@ -516,15 +525,17 @@ document.addEventListener("DOMContentLoaded", () => {
           const vNum = Number(jmlViews) || 0;
           const isLegend = vNum > 10000;
           const itemDasar = isLegend
-            ? ["👑", "10K+", "✨", "🎉", "🏆", "SuperG", "M.A.Y"]
-            : ["🍠", "🌽", "🌶️", "🥔", "🍘", vNum > 0 ? String(vNum) : "✨", "SuperG", "M.A.Y"];
+            ? ["👑", "10K+", "✨", "🎉", "Crea'z", "SuperG", "M.A.Y"]
+            : ["🍠", "🌽", "🌶️", "🥔", "🍘", vNum > 0 ? String(vNum) : "✨", "Crea'z", "SuperG", "M.A.Y"];
 
           for (let i = 0; i < 24; i++) {
             const p = document.createElement("span");
             p.className = "partikel-hujan";
             const isi = itemDasar[i % itemDasar.length];
             p.innerText = isi;
-            if (isi === "SuperG" || isi === "M.A.Y") {
+            if (isi === "Crea'z") {
+              p.style.cssText += "font-size:11.5px;font-weight:900;color:#f4be2c;background:#5a2d0c;border:2px solid #f4be2c;border-radius:99px;padding:2px 9px;box-shadow:0 2px 0 #2d1606;";
+            } else if (isi === "SuperG" || isi === "M.A.Y") {
               p.style.cssText += "font-size:11.5px;font-weight:900;color:#5a2d0c;background:" + (isi === "SuperG" ? "#f4be2c" : "#fef7dc") + ";border:2px solid #5a2d0c;border-radius:99px;padding:2px 9px;box-shadow:0 2px 0 #5a2d0c;";
             } else if (/^[0-9]+$|^10K\+$/.test(isi)) {
               p.style.cssText += "font-size:12px;font-weight:900;color:#fef7dc;background:#5a2d0c;border:2px solid #f4be2c;border-radius:99px;padding:2px 9px;box-shadow:0 2px 0 #5a2d0c;";
