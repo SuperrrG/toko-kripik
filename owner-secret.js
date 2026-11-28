@@ -149,20 +149,26 @@
   async function ambilSemuaDataKunjungan() {
     const lokal = JSON.parse(localStorage.getItem(LS_LOG_KEY) || "[]");
     const fbUrl = getFirebaseUrl();
-    if (!fbUrl) return { list: lokal, total: lokal.length };
+    if (!fbUrl) return { list: lokal, total: lokal.length, totalTerjual: 15 };
     try {
-      const [resV, resM] = await Promise.all([
-        fetch(`${fbUrl}/visitors.json`),
-        fetch(`${fbUrl}/visitors_meta.json`)
+      const [resV, resM, resP] = await Promise.all([
+        fetch(`${fbUrl}/visitors.json?t=${Date.now()}`, { cache: "no-store" }),
+        fetch(`${fbUrl}/visitors_meta.json?t=${Date.now()}`, { cache: "no-store" }),
+        fetch(`${fbUrl}/public_stats/products.json?t=${Date.now()}`, { cache: "no-store" })
       ]);
       const obj = await resV.json();
       const meta = (await resM.json()) || {};
+      const prodObj = (await resP.json()) || {};
       const list = (obj && typeof obj === "object")
         ? Object.values(obj).sort((a, b) => (b.id || 0) - (a.id || 0)).slice(0, 100)
         : lokal;
       const total = Math.max(Number(meta.total) || 0, list.length);
-      return { list, total };
-    } catch (e) { return { list: lokal, total: lokal.length }; }
+      let extraTerjual = 0;
+      if (prodObj && typeof prodObj === "object") {
+        Object.values(prodObj).forEach(item => { extraTerjual += Number(item && item.sold_extra) || 0; });
+      }
+      return { list, total, totalTerjual: 15 + extraTerjual };
+    } catch (e) { return { list: lokal, total: lokal.length, totalTerjual: 15 }; }
   }
 
   function buatStyleOwner() {
@@ -174,9 +180,9 @@
       .owner-box { width: 100%; max-width: 430px; max-height: 88vh; overflow-y: auto; background: #fef7dc; border: 3px solid #5a2d0c; border-radius: 22px; box-shadow: 0 10px 0 #5a2d0c; padding: 20px; color: #5a2d0c; font-family: inherit; box-sizing: border-box; }
       .owner-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px dashed #5a2d0c; padding-bottom: 12px; margin-bottom: 14px; }
       .owner-close { background: #fee2e2; color: #b91c1c; border: 2px solid #5a2d0c; border-radius: 50%; width: 34px; height: 34px; font-weight: 900; cursor: pointer; }
-      .owner-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-      .owner-stat-card { background: #fff; border: 2px solid #5a2d0c; border-radius: 14px; padding: 12px; text-align: center; box-shadow: 0 3px 0 #5a2d0c; }
-      .owner-stat-card b { display: block; font-size: 22px; color: #b45309; margin-top: 2px; }
+      .owner-stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+      .owner-stat-card { background: #fff; border: 2px solid #5a2d0c; border-radius: 14px; padding: 10px 6px; text-align: center; box-shadow: 0 3px 0 #5a2d0c; }
+      .owner-stat-card b { display: block; font-size: 20px; color: #b45309; margin-top: 2px; }
       .owner-visitor-card { background: #fff; border: 1.5px solid #5a2d0c; border-radius: 12px; padding: 10px 12px; margin-bottom: 9px; font-size: 12px; line-height: 1.45; }
       .owner-btn { background: #f4be2c; color: #5a2d0c; border: 2px solid #5a2d0c; border-radius: 12px; padding: 9px 12px; font-weight: 900; font-size: 12.5px; box-shadow: 0 3px 0 #5a2d0c; cursor: pointer; }
       .owner-btn.danger { background: #fee2e2; color: #b91c1c; }
@@ -213,7 +219,7 @@
       });
     };
 
-    const { list: data, total: totalSemua } = await ambilSemuaDataKunjungan();
+    const { list: data, total: totalSemua, totalTerjual } = await ambilSemuaDataKunjungan();
     const now = new Date();
     const hariIniKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
     const jmlHariIni = data.filter(d => d.tanggalKey === hariIniKey).length;
@@ -236,8 +242,9 @@
 
     document.getElementById("owner-dash-body").innerHTML = `
       <div class="owner-stat-grid">
-        <div class="owner-stat-card"><span style="font-size:11.5px;font-weight:800;">👁️ Total Pengunjung</span><b>${totalSemua}</b></div>
-        <div class="owner-stat-card"><span style="font-size:11.5px;font-weight:800;">📅 Hari Ini</span><b>${jmlHariIni}</b></div>
+        <div class="owner-stat-card"><span style="font-size:11px;font-weight:800;">👁️ Pengunjung</span><b>${totalSemua}</b></div>
+        <div class="owner-stat-card"><span style="font-size:11px;font-weight:800;">📅 Hari Ini</span><b>${jmlHariIni}</b></div>
+        <div class="owner-stat-card"><span style="font-size:11px;font-weight:800;">🛍️ Terjual</span><b style="color:#15803d;">${totalTerjual}</b></div>
       </div>
       <div style="display:flex;gap:8px;margin-bottom:12px;">
         <button id="owner-refresh-btn" class="owner-btn" style="flex:1;">🔄 Segarkan Data</button>
