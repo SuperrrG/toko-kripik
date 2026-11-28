@@ -509,17 +509,33 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>`;
         document.body.appendChild(bModal);
 
-        const wadahHujan = document.getElementById("wadah-hujan");
-        const ikonHujan = ["🍠", "🌽", "🌶️", "🥔", "🍘"];
-        for (let i = 0; i < 16; i++) {
-          const p = document.createElement("span");
-          p.className = "partikel-hujan";
-          p.innerText = ikonHujan[i % ikonHujan.length];
-          p.style.left = (Math.random() * 94) + "%";
-          p.style.animationDuration = (2.8 + Math.random() * 2.5) + "s";
-          p.style.animationDelay = (Math.random() * 2.5) + "s";
-          wadahHujan.appendChild(p);
-        }
+        window.renderHujanProfil = function(jmlViews) {
+          const wadahHujan = document.getElementById("wadah-hujan");
+          if (!wadahHujan) return;
+          wadahHujan.innerHTML = "";
+          const vNum = Number(jmlViews) || 0;
+          const isLegend = vNum > 10000;
+          const itemDasar = isLegend
+            ? ["👑", "10K+", "✨", "🎉", "🏆", "SuperG", "M.A.Y"]
+            : ["🍠", "🌽", "🌶️", "🥔", "🍘", vNum > 0 ? String(vNum) : "✨", "SuperG", "M.A.Y"];
+
+          for (let i = 0; i < 18; i++) {
+            const p = document.createElement("span");
+            p.className = "partikel-hujan";
+            const isi = itemDasar[i % itemDasar.length];
+            p.innerText = isi;
+            if (isi === "SuperG" || isi === "M.A.Y") {
+              p.style.cssText += "font-size:9px;font-weight:900;color:#5a2d0c;background:" + (isi === "SuperG" ? "#f4be2c" : "#fef7dc") + ";border:1.5px solid #5a2d0c;border-radius:99px;padding:1px 6px;box-shadow:0 1.5px 0 #5a2d0c;opacity:0.88;";
+            } else if (/^[0-9]+$|^10K\+$/.test(isi)) {
+              p.style.cssText += "font-size:10px;font-weight:900;color:#fef7dc;background:#5a2d0c;border:1.5px solid #f4be2c;border-radius:99px;padding:1px 6px;opacity:0.9;";
+            }
+            p.style.left = (Math.random() * 90) + "%";
+            p.style.animationDuration = (3.0 + Math.random() * 2.5) + "s";
+            p.style.animationDelay = (Math.random() * 2.5) + "s";
+            wadahHujan.appendChild(p);
+          }
+        };
+        window.renderHujanProfil(0);
 
         document.getElementById("btn-qr-katalog").onclick = function() {
           const urlKat = "https://superrrg.github.io/toko-kripik/#katalog";
@@ -574,7 +590,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (window.CREAZ_STATS) {
         window.CREAZ_STATS.catatDanAmbilProfil().then(v => {
           const elPv = document.getElementById("badge-profil-views");
-          if (elPv) elPv.innerText = `👁️ Profil dilihat ${v}x`;
+          if (elPv) {
+            elPv.innerText = v > 10000 ? `👑 10.000+ Views • Legenda Crea'z` : `👁️ Profil dilihat ${v}x`;
+          }
+          if (typeof window.renderHujanProfil === "function") window.renderHujanProfil(v);
         });
       }
       window.tampilLoadingAksi("✨ Membuka profil Keripik Crea'z...", 1600, () => { bModal.classList.add("active"); bModal.style.display = "flex"; bModal.style.opacity = "1"; bModal.style.pointerEvents = "auto"; bukaOverlay(); });
