@@ -1,5 +1,5 @@
 window.CREAZ_STATS = (function () {
-  const FB_URL = "https://firebasedatabase.app";
+  const FB_URL = "https://" + "creaz-visitor-default-rtdb.asia-southeast1.firebasedatabase.app";
 
   const BASE_SOLD = {
     "Keripik Talas Crea'z — Rasa Jagung Manis": 5,
