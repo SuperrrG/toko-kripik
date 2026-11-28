@@ -147,6 +147,7 @@
     grid.querySelectorAll(".btn-detail").forEach(btn => {
       btn.onclick = () => {
         const p = daftarProduk[btn.dataset.idx];
+        const bukaDetailSekarang = () => {
         document.getElementById("modal-img").src = p.img;
         document.getElementById("modal-title").innerText = p.nama;
         document.getElementById("modal-price").innerText = "Rp " + Number(p.harga).toLocaleString("id-ID");
@@ -164,6 +165,12 @@
         mAdd.onclick = () => { if (p.stok) { tambahKeKeranjangGlobal(p); document.getElementById("close-modal").click(); } };
         document.getElementById("detail-modal").classList.add("active");
         document.getElementById("overlay").classList.add("active");
+        };
+        if (typeof window.tampilLoadingAksi === "function") {
+          window.tampilLoadingAksi("🔍 Memuat detail produk...", 900, bukaDetailSekarang);
+        } else {
+          bukaDetailSekarang();
+        }
       };
     });
 
