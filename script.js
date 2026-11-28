@@ -473,7 +473,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let bModal = document.getElementById("brand-modal");
       if (!bModal) {
         const st = document.createElement("style");
-        st.innerHTML = `@keyframes hujanJatuh { 0% { transform: translateY(-20px) rotate(0deg); opacity: 0.9; } 100% { transform: translateY(390px) rotate(320deg); opacity: 0; } } .partikel-hujan { position: absolute; top: -20px; pointer-events: none; font-size: 15px; animation: hujanJatuh linear infinite; z-index: 1; }`;
+        st.innerHTML = `@keyframes hujanJatuh { 0% { transform: translateY(-30px) translateX(0px) rotate(-8deg); opacity: 0; } 12% { opacity: 0.95; } 50% { transform: translateY(290px) translateX(10px) rotate(10deg); opacity: 0.9; } 88% { opacity: 0.85; } 100% { transform: translateY(620px) translateX(-8px) rotate(-6deg); opacity: 0; } } .partikel-hujan { position: absolute; top: -30px; pointer-events: none; font-size: 18px; animation: hujanJatuh ease-in-out infinite; z-index: 1; white-space: nowrap; }`;
         document.head.appendChild(st);
 
         bModal = document.createElement("div");
@@ -519,19 +519,19 @@ document.addEventListener("DOMContentLoaded", () => {
             ? ["👑", "10K+", "✨", "🎉", "🏆", "SuperG", "M.A.Y"]
             : ["🍠", "🌽", "🌶️", "🥔", "🍘", vNum > 0 ? String(vNum) : "✨", "SuperG", "M.A.Y"];
 
-          for (let i = 0; i < 18; i++) {
+          for (let i = 0; i < 24; i++) {
             const p = document.createElement("span");
             p.className = "partikel-hujan";
             const isi = itemDasar[i % itemDasar.length];
             p.innerText = isi;
             if (isi === "SuperG" || isi === "M.A.Y") {
-              p.style.cssText += "font-size:9px;font-weight:900;color:#5a2d0c;background:" + (isi === "SuperG" ? "#f4be2c" : "#fef7dc") + ";border:1.5px solid #5a2d0c;border-radius:99px;padding:1px 6px;box-shadow:0 1.5px 0 #5a2d0c;opacity:0.88;";
+              p.style.cssText += "font-size:11.5px;font-weight:900;color:#5a2d0c;background:" + (isi === "SuperG" ? "#f4be2c" : "#fef7dc") + ";border:2px solid #5a2d0c;border-radius:99px;padding:2px 9px;box-shadow:0 2px 0 #5a2d0c;";
             } else if (/^[0-9]+$|^10K\+$/.test(isi)) {
-              p.style.cssText += "font-size:10px;font-weight:900;color:#fef7dc;background:#5a2d0c;border:1.5px solid #f4be2c;border-radius:99px;padding:1px 6px;opacity:0.9;";
+              p.style.cssText += "font-size:12px;font-weight:900;color:#fef7dc;background:#5a2d0c;border:2px solid #f4be2c;border-radius:99px;padding:2px 9px;box-shadow:0 2px 0 #5a2d0c;";
             }
-            p.style.left = (Math.random() * 90) + "%";
-            p.style.animationDuration = (3.0 + Math.random() * 2.5) + "s";
-            p.style.animationDelay = (Math.random() * 2.5) + "s";
+            p.style.left = ((i * 13 + Math.random() * 8) % 86) + "%";
+            p.style.animationDuration = (3.6 + (i % 5) * 0.55) + "s";
+            p.style.animationDelay = (-Math.random() * 4.5) + "s";
             wadahHujan.appendChild(p);
           }
         };
