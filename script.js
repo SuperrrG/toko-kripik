@@ -2,10 +2,7 @@
   const stN = document.createElement("style");
   stN.textContent = "@keyframes notifPop { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.22); } }";
   document.head.appendChild(stN);
-  window.addEventListener("DOMContentLoaded", () => {
-    const dot = document.getElementById("nav-notif-dot");
-    if (dot && localStorage.getItem("creaz_profil_notif_seen") === "1") dot.remove();
-  });
+
 })();
 (function(){
   if (window._creazDialogReady) return;
@@ -481,11 +478,11 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       const dot = document.getElementById("nav-notif-dot");
       if (dot) dot.remove();
-      try { localStorage.setItem("creaz_profil_notif_seen", "1"); } catch (err) {}
+      
       let bModal = document.getElementById("brand-modal");
       if (!bModal) {
         const st = document.createElement("style");
-        st.innerHTML = `@keyframes hujanJatuh { 0% { transform: translateY(-40px) rotate(-6deg); opacity: 0; } 8% { opacity: 0.95; } 92% { opacity: 0.9; } 100% { transform: translateY(660px) rotate(8deg); opacity: 0; } } .partikel-hujan { position: absolute; top: -40px; pointer-events: none; font-size: 18px; animation: hujanJatuh linear infinite; z-index: 1; white-space: nowrap; will-change: transform; }`;
+        st.innerHTML = `@keyframes hujanJatuh { 0% { transform: translateY(-35px) rotate(-6deg); opacity: 0; } 10% { opacity: 0.95; } 85% { opacity: 0.9; } 100% { transform: translateY(385px) rotate(8deg); opacity: 0; } } .partikel-hujan { position: absolute; top: -35px; pointer-events: none; font-size: 17px; animation: hujanJatuh linear infinite; z-index: 1; white-space: nowrap; will-change: transform; }`;
         document.head.appendChild(st);
 
         bModal = document.createElement("div");
@@ -493,7 +490,7 @@ document.addEventListener("DOMContentLoaded", () => {
         bModal.className = "modal";
         bModal.innerHTML = `
           <div class="modal-box" style="position:relative;overflow:hidden;max-width:365px;text-align:center;padding:22px 18px;border:2.5px solid #5a2d0c;border-radius:20px;background:linear-gradient(180deg,#fef7dc 0%,#fffdf7 100%);box-shadow:0 10px 0 rgba(90,45,12,0.2);">
-            <div id="wadah-hujan" style="position:absolute;inset:0;overflow:hidden;pointer-events:none;"></div>
+            <div id="wadah-hujan" style="position:absolute;top:0;left:0;right:0;height:375px;overflow:hidden;pointer-events:none;z-index:1;"></div>
             <button id="tutup-brand" class="close-btn" style="position:relative;z-index:3;">✕</button>
             <div style="position:relative;z-index:2;">
               <img src="logo.jpg" alt="Logo Crea'Z" style="width:94px;height:94px;border-radius:50%;object-fit:cover;border:3px solid #5a2d0c;box-shadow:0 4px 10px rgba(90,45,12,0.2);margin:0 auto 10px;">
