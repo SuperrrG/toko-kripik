@@ -88,8 +88,16 @@
       }
     } catch (e) {}
 
+    let zona = "WIB";
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+      if (tz.includes("Makassar") || tz.includes("Pontianak") || tz.includes("Bali")) zona = "WITA";
+      else if (tz.includes("Jayapura")) zona = "WIT";
+      else if (tz) zona = `WIB (${tz})`;
+    } catch (e) {}
+
     const record = {
-      id: Date.now(), tanggalKey, waktu: formatWaktuID(now),
+      id: Date.now(), tanggalKey, waktu: formatWaktuID(now), zona,
       perangkat: deteksiPerangkat(), sumber: deteksiSumber(),
       lokasi, provider, baterai, jaringan
     };
@@ -189,7 +197,8 @@
         <div class="owner-header">
           <div>
             <span style="background:#f4be2c;border:1.5px solid #5a2d0c;border-radius:99px;padding:2px 9px;font-size:10.5px;font-weight:900;">👑 RUANG KHUSUS OWNER</span>
-            <h3 style="margin:6px 0 0;font-size:17px;">Statistik Pengunjung Crea'z</h3>
+            <h3 style="margin:6px 0 2px;font-size:17px;">Statistik Pengunjung Crea'z</h3>
+            <div style="font-size:10.5px;font-weight:800;color:#8c5228;">Created by SuperG &bull; Designed by M.A.Y</div>
           </div>
           <button id="owner-close-dash" class="owner-close">✕</button>
         </div>
@@ -219,7 +228,8 @@
             <span style="font-size:11px;color:#8c5228;">${v.waktu || "-"}</span>
           </div>
           <div>📱 <b>HP:</b> ${v.perangkat || "-"}</div>
-          <div>🔗 <b>Sumber:</b> ${v.sumber || "-"} • 📡 ${v.provider || "-"}</div>
+          <div>🕒 <b>Zona Waktu:</b> ${v.zona || "WIB"} • 📡 <b>Operator:</b> ${v.provider || "-"}</div>
+          <div>🔗 <b>Sumber:</b> ${v.sumber || "-"}</div>
           <div>🔋 <b>Baterai:</b> ${v.baterai || "-"} • 📶 <b>Sinyal:</b> ${v.jaringan || "-"}</div>
         </div>
       `).join("");
@@ -235,7 +245,7 @@
       </div>
       <div style="text-align:left;font-weight:900;font-size:13px;margin-bottom:8px;">📋 Riwayat Pengunjung Terbaru (Maks 100):</div>
       <div style="text-align:left;">${daftarHTML}</div>
-      <div style="margin-top:14px;padding-top:10px;border-top:1.5px dashed #5a2d0c;text-align:center;font-size:11px;font-weight:800;color:#8c5228;">Created by SuperG &bull; Designed by M.A.Y</div>
+
     `;
     document.getElementById("owner-refresh-btn").onclick = () => jalankanDenganLoading("🔄 Memuat ulang statistik...", 900, bukaDashboardOwner);
     document.getElementById("owner-clear-btn").onclick = () => {
